@@ -12,10 +12,10 @@ export default defineConfig(({ mode }) => ({
   base: mode === 'production' ? '/malan-alerter/' : '/', 
   server:{
     proxy: {
-      '/api/items': {
+      '/malangg': {
         target: 'https://mapleland.gg',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api\/items/, '/api/items')
+        rewrite: path => path.replace(/^\/malangg/, '/api/items')
       },
       '/api': {
         target: 'http://192.168.45.201:38081',

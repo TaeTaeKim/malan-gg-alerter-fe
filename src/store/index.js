@@ -16,7 +16,7 @@ export const useMainStore = defineStore('main', {
   actions: {
     /** 1) 전체 아이템 목록 조회하여 allItems에 저장 */
     async fetchAllItems() {
-      const res = await axios.get('/api/items')
+      const res = await axios.get('/malangg')
       // 가정: API가 [{ id: '1001', name: '초승달검' }, …] 형태로 준다고 하면:
       this.allItems = res.data.map(item => ({
         id: item.itemCode,
