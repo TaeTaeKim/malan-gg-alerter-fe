@@ -19,10 +19,10 @@ export default defineConfig(({ mode }) => ({
       '/malangg': {
         target: 'https://mapleland.gg',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/malangg/, '/api/items')
+        rewrite: path => path.replace(/^\/malangg/, '')
       },
       '/api': {
-        target: 'http://192.168.45.201:38081',
+        target: mode === 'production'? 'http://192.168.45.201:38081': 'http://localhost:8080',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }

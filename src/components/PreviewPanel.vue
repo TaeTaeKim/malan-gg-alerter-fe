@@ -1,6 +1,8 @@
 <template>
   <div v-if="imageUrl" class="preview-panel">
-    <img :src="imageUrl" alt="preview" class="preview-img"/>
+    <a :href="`https://mapleland.gg/item/${store.currentItem.id}`" target="_blank" rel="noopener noreferrer">
+      <img :src="imageUrl" alt="preview" class="preview-img"/>
+    </a>
     <OptionSelector @submit="addItem" />
   </div>
 </template>

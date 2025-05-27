@@ -12,7 +12,9 @@
     </div>
     <div class="item-name">
       <div>
-        {{ item.koreanName }}
+        <a :href="`https://mapleland.gg/item/${ item.id }`" target="_blank" rel="noopener noreferrer">
+          {{ item.koreanName }}
+        </a>
       </div>
       <!-- 수정버튼 : 클릭시 option value를 변경할 수 있도록 함 -->
       <button class="edit-btn" @click="$emit('edit')">✏️</button>
@@ -41,7 +43,7 @@ const props = defineProps({
   transition: box-shadow 0.2s;
   width: 100%;
   max-width: 220px; /* 카드 최대 너비 제한 */
-  min-width: 180px;
+  min-width: 200px;
   box-sizing: border-box;
   line-height: 0.5;
 }
@@ -63,8 +65,8 @@ const props = defineProps({
   gap: 4px 12px;
 }
 .edit-btn{
-  padding: 0.3em 0.6em;
-  margin-left: 0.5em;
+  padding: 0.1em 0.4em;
+  margin-left: 0.2em;
   background: none;
 
 }
