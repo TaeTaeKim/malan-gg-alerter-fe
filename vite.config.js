@@ -9,7 +9,11 @@ export default defineConfig(({ mode }) => ({
       '@': resolve(__dirname, 'src')
     }
   },
+  // Vite가 빌드할 때 사용하는 기본 경로 설정
   base: mode === 'production' ? '/malan-alerter/' : '/', 
+  define:{
+    __API_PREFIX__: mode === 'production' ? '/malan-alerter/' : '/'
+  },
   server:{
     proxy: {
       '/malangg': {

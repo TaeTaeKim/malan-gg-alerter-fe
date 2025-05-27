@@ -16,7 +16,7 @@ export const useMainStore = defineStore('main', {
   actions: {
     /** 1) 전체 아이템 목록 조회하여 allItems에 저장 */
     async fetchAllItems() {
-      const res = await axios.get('/malangg')
+      const res = await axios.get(`${__API_PREFIX__}/malangg/api/items`)
       // 가정: API가 [{ id: '1001', name: '초승달검' }, …] 형태로 준다고 하면:
       this.allItems = res.data.map(item => ({
         id: item.itemCode,
@@ -58,7 +58,7 @@ export const useMainStore = defineStore('main', {
     },
     /** 4) 등록된 아이템 목록을 가져온다. */
     async fetchRegisteredItems() {
-      await axios.get('/api/malan-alter')
+      await axios.get(`${__API_PREFIX__}/api/malan-alter`)
       .then(res => {
         res.data.forEach(resItem => {
           this.registeredItems.push({
@@ -79,7 +79,7 @@ export const useMainStore = defineStore('main', {
     async registerItem(itemId, option) {
       // 서버 스펙: POST /malan-alter?itemId=<id>  body: ItemCondition JSON
       await axios.post(
-        `/api/malan-alter?itemId=${itemId}`,
+        `${__API_PREFIX__}/api/malan-alter?itemId=${itemId}`,
         option
       )
       // 등록후 registeredItems 갱신
@@ -89,7 +89,7 @@ export const useMainStore = defineStore('main', {
     /** 5) 수정 (PATCH) */
     async updateItem(itemId, newOption) {
       await axios.patch(
-        `/malan-alter`,
+        `${__API_PREFIX__}/malan-alter`,
         newOption,
         { params: { itemId } }
       )
@@ -99,7 +99,7 @@ export const useMainStore = defineStore('main', {
 
     /** 6) 삭제 (DELETE) */
     async deleteItem(itemId) {
-      await axios.delete(`/api/malan-alter`, { params: { itemId } })
+      await axios.delete(`${__API_PREFIX__}/api/malan-alter`, { params: { itemId } })
       this.registeredItems = this.registeredItems.filter(i => i.id !== itemId)
     },
 
