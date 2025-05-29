@@ -20,7 +20,7 @@ import { itemOptions } from '@/constants/itemOptions'
 
 const options = itemOptions
 const optionValues = reactive({})
-options.forEach(opt => optionValues[opt.key] = 0)
+options.forEach(opt => optionValues[opt.key] = null)
 
 const emit = defineEmits(['submit'])
 
