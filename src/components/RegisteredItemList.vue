@@ -20,7 +20,7 @@ const items = computed(() => store.registeredItems)
 <style scoped>
 .item-list {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 한 행에 4개 고정 */
+  grid-template-columns: repeat(4, 1fr); /* 한 행에 4개 고정 */
   gap: 20px;
   width: 100%;
   max-width: 100%;
