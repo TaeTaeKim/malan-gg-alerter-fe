@@ -75,6 +75,10 @@ export const useMainStore = defineStore('main', {
       })
     },
 
+    clearRegisteredItems(){
+      this.registeredItems = []
+    },
+
     /** 4) 등록 (Spring Boot 서버 post) */
     async registerItem(itemId, option) {
       // 서버 스펙: POST /malan-alter?itemId=<id>  body: ItemCondition JSON

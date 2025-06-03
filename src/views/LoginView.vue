@@ -29,13 +29,11 @@ const password = ref('');
 const errorMessage = ref('');
 
 const handleLogin = async () => {
-  try {
-    const success = await authStore.login(id.value, password.value);
-    if(success){
-        router.push('/'); // 로그인 성공 시 홈으로 이동
-    }
-  } catch (error) {
-    errorMessage.value = '로그인 실패. 아이디와 비밀번호를 확인하세요.';
+  const result = await authStore.login(id.value, password.value);
+  if(result.success){
+      router.push('/'); // 로그인 성공 시 홈으로 이동
+  }else{
+    errorMessage.value = result.message;
   }
 };
 </script>

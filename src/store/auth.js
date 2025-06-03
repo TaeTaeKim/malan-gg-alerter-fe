@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import axios from "axios";
+import axios, { HttpStatusCode } from "axios";
+import { useMainStore } from "@/store";
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -16,10 +17,18 @@ export const useAuthStore = defineStore('auth', {
                 const response = await axios.post(`${__API_PREFIX__}/api/malan-alter/auth/login`, {'username':id,'password': pwd})
                 const {accessToken, refreshToken, expireAt} = response.data
                 this.setTokens(accessToken, refreshToken)
-                return true
+                return {success: true}
             } catch (error){
-                console.error(error)
-
+                if (error.response?.data?.code === 'AUTH_005') {
+                    return { 
+                        success: false, 
+                        message: error.response.data.message 
+                    }
+                }
+                return { 
+                    success: false, 
+                    message: '로그인에 실패했습니다.' 
+                }
             }
         },
         setTokens(accessToken, refreshToken){
@@ -42,13 +51,44 @@ export const useAuthStore = defineStore('auth', {
                 throw error
             }
         },
+        isTokenExpired(){
+            if(!this.accessToken) return true
+            try{
+                const payload = JSON.parse(atob(this.accessToken.split('.')[1]))
+                return Date.now() >= payload.exp * 1000
+            }catch(e){
+                return true
+            }
+        },
+
         async logout(){
             await axios.post(`${__API_PREFIX__}/api/malan-alter/auth/logout`)
             this.accessToken = null
             this.refreshToken = null
             localStorage.removeItem('accessToken')
             localStorage.removeItem('refreshToken')
-
+            // clear main store's registeredItems state.
+            const mainStore = useMainStore()
+            mainStore.clearRegisteredItems()
+        },
+        async renewToken(){
+            const payload =JSON.parse(atob(this.accessToken.split('.')[1]))
+            const refreshResponse = await axios.post(`${__API_PREFIX__}/api/malan-alter/auth/refresh`, {
+                "username" : payload.sub,
+                "refreshToken" : this.refreshToken
+            })
+            try{
+                if(refreshResponse.status== HttpStatusCode.Ok){
+                    const { accessToken, refreshToken} =  refreshResponse.data
+                    this.setTokens(accessToken, refreshToken)
+                }else{
+                    console.warn(`API Server Return Status : ${refreshResponse.status}`)
+                    this.logout()
+                }
+            }catch(error){
+                console.error("Error occur in refreshing token")
+                this.logout()
+            }
         }
     },
 })

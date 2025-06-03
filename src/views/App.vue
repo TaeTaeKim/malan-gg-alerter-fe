@@ -1,10 +1,12 @@
 <template>
   <div id="app">
+    <GlobalNotification />
     <router-view></router-view>
   </div>
 </template>
 
 <script setup>
+import GlobalNotification from '@/components/GlobalNotification.vue'
 </script>
 
 <style>
