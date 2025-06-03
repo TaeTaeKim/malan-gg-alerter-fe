@@ -4,13 +4,14 @@ import { resolve } from 'path'
 
 export default defineConfig(({ mode }) => ({
   plugins: [vue()],
+
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src')
     }
   },
   // Vite가 빌드할 때 사용하는 기본 경로 설정
-  base: mode === 'production' ? '/malan-alerter/' : '/', 
+  base: mode === '/', 
   define:{
     __API_PREFIX__: JSON.stringify(mode === 'production' ? '/malan-alerter/' : '')
   },

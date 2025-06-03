@@ -13,8 +13,14 @@ app.use(pinia)
 app.use(router)
 
 
-const store = useMainStore()
-store.fetchAllItems()
-const auth = useAuthStore()
-auth.initialize()
+// 앱 마운트 후 초기화 수행
 app.mount('#app')
+
+const store = useMainStore()
+const auth = useAuthStore()
+
+// 비동기 초기화
+Promise.all([
+  store.fetchAllItems(),
+  auth.initialize()
+]).catch(console.error)
