@@ -11,9 +11,9 @@ export default defineConfig(({ mode }) => ({
     }
   },
   // Vite가 빌드할 때 사용하는 기본 경로 설정
-  base: mode === '/', 
+  base :  '/', 
   define:{
-    __API_PREFIX__: JSON.stringify(mode === 'production' ? '/malan-alerter/' : '')
+    __API_PREFIX__: JSON.stringify(mode === 'production' ? '/malan-alerter' : '')
   },
   server:{
     proxy: {
