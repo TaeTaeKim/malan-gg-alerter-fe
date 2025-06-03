@@ -16,5 +16,6 @@ const imageUrl = computed(() => store.currentItem?.iconUrl)
 
 function addItem(optionData) {
   store.registerItem(store.currentItem.id, optionData)
+  window.location.reload()
 }
 </script>
