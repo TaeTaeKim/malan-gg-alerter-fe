@@ -6,7 +6,7 @@ import { useAuthStore } from '@/store/auth'
 
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.PROD?'/malan-alerter/' : '/'),
     routes: [
         {
             path: '/',
