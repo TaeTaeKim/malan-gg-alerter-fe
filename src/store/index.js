@@ -58,11 +58,12 @@ export const useMainStore = defineStore('main', {
     },
     /** 4) 등록된 아이템 목록을 가져온다. */
     async fetchRegisteredItems() {
-      await axios.get(`${__API_PREFIX__}/api/malan-alter`)
+      await axios.get(`${__API_PREFIX__}/api/alerter`)
       .then(res => {
         res.data.forEach(resItem => {
           this.registeredItems.push({
-            id: resItem.itemId,
+            id: resItem.id,
+            itemId: resItem.itemId,
             koreanName: resItem.itemName,
             imageUrl: this.getItemIconUrl(resItem.itemId),
             option: Object.fromEntries(
@@ -81,9 +82,9 @@ export const useMainStore = defineStore('main', {
 
     /** 4) 등록 (Spring Boot 서버 post) */
     async registerItem(itemId, option) {
-      // 서버 스펙: POST /malan-alter?itemId=<id>  body: ItemCondition JSON
+      // 서버 스펙: POST /alerter?itemId=<id>  body: ItemCondition JSON
       await axios.post(
-        `${__API_PREFIX__}/api/malan-alter?itemId=${itemId}`,
+        `${__API_PREFIX__}/api/alerter?itemId=${itemId}`,
         option
       )
       // 등록후 registeredItems 갱신
@@ -93,7 +94,7 @@ export const useMainStore = defineStore('main', {
     /** 5) 수정 (PATCH) */
     async updateItem(itemId, newOption) {
       await axios.patch(
-        `${__API_PREFIX__}/malan-alter`,
+        `${__API_PREFIX__}/alerter`,
         newOption,
         { params: { itemId } }
       )
@@ -102,14 +103,15 @@ export const useMainStore = defineStore('main', {
     },
 
     /** 6) 삭제 (DELETE) */
-    async deleteItem(itemId) {
-      await axios.delete(`${__API_PREFIX__}/api/malan-alter`, { params: { itemId } })
-      this.registeredItems = this.registeredItems.filter(i => i.id !== itemId)
+    async deleteItem(alertId) {
+      await axios.delete(`${__API_PREFIX__}/api/alerter`, { params: { alertId: alertId } })
+      this.registeredItems = this.registeredItems.filter(i => i.id !== alertId)
     },
 
     /** (기존) 알람 토글 */
-    toggleAlarm(id) {
-      const it = this.registeredItems.find(i => i.id === id)
+    async toggleAlarm(alertId) {
+      const it = this.registeredItems.find(i => i.id === alertId)
+      await axios.patch(`${__API_PREFIX__}/api/alerter/toggle/${alertId}`)
       if (it) it.alarmOn = !it.alarmOn
     }
   }

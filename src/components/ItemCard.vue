@@ -12,7 +12,7 @@
     </div>
     <div class="item-name">
       <div>
-        <a :href="`https://mapleland.gg/item/${ item.id }`" target="_blank" rel="noopener noreferrer">
+        <a :href="`https://mapleland.gg/item/${ item.itemId }`" target="_blank" rel="noopener noreferrer">
           {{ item.koreanName }}
         </a>
       </div>

@@ -1,11 +1,11 @@
 <template>
   <div class="item-list">
     <ItemCard
-      v-for="item in items"
-      :key="item.id"
-      :item="item"
-      @toggleAlarm="store.toggleAlarm(item.id)"
-      @delete = "store.deleteItem(item.id)"
+      v-for="registeredItem in registeredItems"
+      :key="registeredItem.id"
+      :item="registeredItem"
+      @toggleAlarm="store.toggleAlarm(registeredItem.id)"
+      @delete = "store.deleteItem(registeredItem.id)"
     />
   </div>
 </template>
@@ -14,7 +14,7 @@ import { computed } from 'vue'
 import { useMainStore } from '@/store'
 import ItemCard from './ItemCard.vue'
 const store = useMainStore()
-const items = computed(() => store.registeredItems)
+const registeredItems = computed(() => store.registeredItems)
 </script>
 
 <style scoped>

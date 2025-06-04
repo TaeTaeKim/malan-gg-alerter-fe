@@ -14,7 +14,7 @@ export const useAuthStore = defineStore('auth', {
         async login(id, pwd){
             
             try {
-                const response = await axios.post(`${__API_PREFIX__}/api/malan-alter/auth/login`, {'username':id,'password': pwd})
+                const response = await axios.post(`${__API_PREFIX__}/api/alerter/auth/login`, {'username':id,'password': pwd})
                 const {accessToken, refreshToken, expireAt} = response.data
                 this.setTokens(accessToken, refreshToken)
                 return {success: true}
@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async signup(id, pwd){
             try{
-                await axios.post(`${__API_PREFIX__}/api/malan-alter/auth/register`, {'username':id,'password': pwd})
+                await axios.post(`${__API_PREFIX__}/api/alerter/auth/register`, {'username':id,'password': pwd})
             }catch(error){
                 console.error("SignUp Fail", error)
                 throw error
@@ -62,7 +62,7 @@ export const useAuthStore = defineStore('auth', {
         },
 
         async logout(){
-            await axios.post(`${__API_PREFIX__}/api/malan-alter/auth/logout`)
+            await axios.post(`${__API_PREFIX__}/api/alerter/auth/logout`)
             this.accessToken = null
             this.refreshToken = null
             localStorage.removeItem('accessToken')
@@ -73,7 +73,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async renewToken(){
             const payload =JSON.parse(atob(this.accessToken.split('.')[1]))
-            const refreshResponse = await axios.post(`${__API_PREFIX__}/api/malan-alter/auth/refresh`, {
+            const refreshResponse = await axios.post(`${__API_PREFIX__}/api/alerter/auth/refresh`, {
                 "username" : payload.sub,
                 "refreshToken" : this.refreshToken
             })
