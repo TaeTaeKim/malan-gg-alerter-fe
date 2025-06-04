@@ -38,7 +38,8 @@ const props = defineProps({
   border: 1.5px solid #d1d5db;
   border-radius: 12px;
   padding: 10px;
-  background: #374151;
+  background: rgb(71 71 111 / var(--tw-bg-opacity, 1));
+  --tw-bg-opacity: 1;
   box-shadow: 0 2px 8px rgba(0,0,0,0.03);
   transition: box-shadow 0.2s;
   width: 100%;
