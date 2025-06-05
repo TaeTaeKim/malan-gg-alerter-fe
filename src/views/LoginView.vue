@@ -1,46 +1,21 @@
-
 <template>
   <div class="login-view">
-    <h1>로그인</h1>
-    <form @submit.prevent="handleLogin">
-      <div class="form-group">
-        <label for="id">아이디:</label>
-        <input type="text" id="id" v-model="id" required />
-      </div>
-      <div class="form-group">
-        <label for="password">비밀번호:</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <div class="button-group">
-        <button type="submit" class="login-btn">로그인</button>
-        <button type="button" class="signup-btn" @click="router.push('/signup')">
-          회원가입
-        </button>
-      </div>
-    </form>
+    <h1>GG Alarmy</h1>
+    <div class="button-group">
+      <button class="login-btn" @click="redirectToDiscordLogin">Login with Discord</button>
+    </div>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/store/auth';
+import {ref} from 'vue';
 
-const router = useRouter();
-const authStore = useAuthStore();
-const id = ref('');
-const password = ref('');
 const errorMessage = ref('');
 
-const handleLogin = async () => {
-  const result = await authStore.login(id.value, password.value);
-  if(result.success){
-      router.push('/'); // 로그인 성공 시 홈으로 이동
-  }else{
-    errorMessage.value = result.message;
-  }
-};
+ const redirectToDiscordLogin = () => {
+   window.location.href = import.meta.env.VITE_DISCORD_LOGIN_URL
+ }
 </script>
 
 <style scoped>
