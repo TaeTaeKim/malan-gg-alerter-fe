@@ -25,6 +25,5 @@ const registeredItems = computed(() => store.registeredItems)
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  justify-items: center; /* 카드 가운데 정렬 */
 }
 </style>

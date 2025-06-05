@@ -7,7 +7,6 @@
     
     <div class="main-content">
       <div class="search-section">
-        <SearchBar/>
         <PreviewPanel />
       </div>
       
@@ -47,10 +46,32 @@ const handleLogout = async () => {
 
 <style scoped>
 .container {
-  max-width: 1200px;
+  width: min(90%, 1200px); /* More responsive width */
   margin: 0 auto;
   padding: 20px;
+  min-width: 320px;
 }
+
+.main-content {
+  display: grid;
+  gap: 30px;
+  max-width: 100%; /* Ensure content doesn't overflow */
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+/* Add responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    padding: 10px;
+  }
+
+  header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
 
 header {
   display: flex;
