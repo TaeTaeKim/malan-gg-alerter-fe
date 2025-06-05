@@ -23,8 +23,8 @@ axios.interceptors.response.use(
       }
     }
 
-    // refresh token 도 만료되었을 경우 -> 재로그인
-    if(isRefreshTokenExpired(error)){
+    // refresh 만료 혹은 찾지 못했을 떄
+    if(isInvalidRefreshToken(error)){
         const auth = useAuthStore()
         await auth.logout()
         router.push('/login')
@@ -50,7 +50,7 @@ function isAccessTokenExpired(error){
     )
 }
 
-function isRefreshTokenExpired(error){
+function isInvalidRefreshToken(error){
     console.log(error.response)
     return (
         error.response &&
