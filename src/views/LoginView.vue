@@ -1,8 +1,14 @@
 <template>
   <div class="login-view">
-    <h1>GG Alarmy</h1>
+    <div class="header">
+      <img src="/static/logo.png" alt="Logo" class="logo" />
+      <h1>매렌지지 Alarmy</h1>
+    </div>
     <div class="button-group">
-      <button class="login-btn" @click="redirectToDiscordLogin">Login with Discord</button>
+      <button class="login-btn" @click="redirectToDiscordLogin">
+        <img src="/static/discord-logo.png" alt="Discord" class="discord-icon" />
+        디스코드 로그인
+      </button>
     </div>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
@@ -20,40 +26,19 @@ const errorMessage = ref('');
 
 <style scoped>
 .login-view {
-  max-width: 400px;
-  margin: 100px auto;
+  max-width: min(400px, 90vw);  /* Responsive width */
+  min-width: 280px;
+  margin: 0;
   padding: 30px;
   border: 1px solid #374151;
   border-radius: 8px;
   background-color: #1F2937;
   color: #F3F4F6;
-}
-
-.form-group {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-group label {
-  font-size: 0.9rem;
-  color: #D1D5DB;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #374151;
-  border-radius: 4px;
-  background-color: #374151;
-  color: #F3F4F6;
-  box-sizing: border-box;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #60A5FA;
+  /* Center positioning */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .button-group {
@@ -62,32 +47,21 @@ const errorMessage = ref('');
   margin-top: 20px;
 }
 
-.login-btn, .signup-btn {
+.login-btn {
   flex: 1;
-  padding: 10px;
+  padding: 12px 16px;  /* Increased padding */
   border: none;
   border-radius: 4px;
+  background-color: #3B82F6;
+  color: white;
   cursor: pointer;
   font-weight: 500;
   transition: background-color 0.2s;
-}
-
-.login-btn {
-  background-color: #3B82F6;
-  color: white;
+  font-size: clamp(14px, 1.5vw, 16px);  /* Responsive font size */
 }
 
 .login-btn:hover {
   background-color: #2563EB;
-}
-
-.signup-btn {
-  background-color: #4B5563;
-  color: white;
-}
-
-.signup-btn:hover {
-  background-color: #374151;
 }
 
 .error {
@@ -100,6 +74,23 @@ h1 {
   color: #F3F4F6;
   text-align: center;
   margin-bottom: 30px;
-  font-size: 1.8rem;
+  font-size: clamp(1.5rem, 2.5vw, 1.8rem);  /* Responsive font size */
+}
+
+.header {
+  text-align: center;
+}
+
+.logo {
+  width: clamp(80px, 15vw, 100px);  /* Responsive logo size */
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.discord-icon {
+  width: clamp(24px, 3vw, 28px);  /* Increased discord icon size */
+  height: clamp(24px, 3vw, 28px);
+  margin-right: 8px;
+  vertical-align: middle;
 }
 </style>
