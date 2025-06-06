@@ -11,6 +11,7 @@ export const useMainStore = defineStore('main', {
     registeredItems: [],       // { id, image, option, alarmOn }
     // 전체 아이템 목록 (검색용)
     allItems: [],    // [{ id: string, nameKorean: string }]
+    imageCache: new Map(),
   }),
 
   actions: {
@@ -31,16 +32,17 @@ export const useMainStore = defineStore('main', {
       return this.allItems.filter(i =>i.nameKorean.includes(q)).slice(0, 10)
     },
 
-    searchItemName(itemId){
-      // 아이템 ID로 이름 찾기
-      const item = this.allItems.find(i => i.id === itemId)
-      return item ? item.nameKorean : null
-    },
-
     /** 3) 아이콘 URL 반환 헬퍼 */
     getItemIconUrl(itemId) {
-      console.log('item id', itemId)
-      return `https://maplestory.io/api/gms/200/item/${itemId}/icon?resize=2`
+      if (this.imageCache.has(itemId)) {
+        return this.imageCache.get(itemId)
+      }
+      const url = `https://maplestory.io/api/gms/200/item/${itemId}/icon?resize=2`
+      // Preload image
+      const img = new window.Image()
+      img.src = url
+      this.imageCache.set(itemId, url)
+      return url
     },
 
     // 검색된 아이템 정보를 currentItem에 저장
