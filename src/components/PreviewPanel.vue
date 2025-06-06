@@ -16,7 +16,7 @@
   <div class="preview-panel placeholder" v-else>
     <div class="placeholder-content">
       <p>아이템을 검색하세요</p>
-      <SearchBar />
+      <SearchBar/>
     </div>
   </div>
 </template>
@@ -30,10 +30,13 @@ import SearchBar from "@/components/SearchBar.vue";
 const store = useMainStore()
 const imageUrl = computed(() => store.currentItem?.iconUrl)
 
+
 function addItem(optionData) {
   store.registerItem(store.currentItem.id, optionData)
+  clearCurrentItem()
   window.location.reload()
 }
+
 function clearCurrentItem() {
   store.currentItem = null
 }
@@ -50,6 +53,7 @@ function clearCurrentItem() {
   height: 25vh; /* Fixed height instead of max-height */
   overflow-y: auto;
 }
+
 .placeholder {
   color: #9ca3af;
   text-align: center;
@@ -84,6 +88,7 @@ function clearCurrentItem() {
   justify-content: center;
   min-height: 100px;
 }
+
 .image-container {
   position: relative;
   display: flex;
@@ -103,6 +108,7 @@ function clearCurrentItem() {
   transform: scale(1.1);
   opacity: 1;
 }
+
 .placeholder-content p {
   margin: 0;
 }

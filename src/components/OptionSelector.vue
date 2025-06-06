@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <div class="price-row">
+    <div class="preview-price-row">
       <label>
         가격
         <input
@@ -58,16 +58,19 @@ function onSubmit() {
 </script>
 
 <style scoped>
-.price-row {
+.preview-price-row
+{
   margin-bottom: 20px;
 }
 
-.price-row label {
+.preview-price-row
+label {
   display: block;
   width: 100%;
 }
 
-.price-row input {
+.preview-price-row
+input {
   width: 20%;
   padding: 8px;
   margin-left: 1.8rem;
