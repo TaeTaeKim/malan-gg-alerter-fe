@@ -58,6 +58,7 @@ function onSearch() {
 
 // 검색 후보 중 클릭시 검색어를 해당 후보의 이름으로 변경
 function onClick(item) {
+  store.fetchItem(item.nameKorean)
   query.value = item.nameKorean
   candidates.value = []
 }
@@ -90,7 +91,7 @@ function getItemIcon(itemId) {
   display: flex;
   align-items: center;
 
-  background: #2d2d3d;
+  background: #2B2F39;
   border-radius: 10px;
   padding: 4px 12px;
   flex: 1;
