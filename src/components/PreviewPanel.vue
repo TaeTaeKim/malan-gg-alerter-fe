@@ -50,6 +50,7 @@ function clearCurrentItem() {
   height: 25vh; /* Fixed height instead of max-height */
   overflow-y: auto;
 }
+/* 등록 뷰 상단 이름과 메랜지지 링크*/
 .preview-item-name{
   display: flex;
   justify-content: start;
@@ -71,20 +72,19 @@ function clearCurrentItem() {
 }
 .preview-item-info{
   display: flex;
+  justify-content: start;
   gap: 20px;
 }
+/* 등록 뷰 이미지*/
 .preview-left {
-  flex: 0 0 200px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  border-right: 1px solid #d1d5db;
   padding-right: 20px;
 }
 
 .preview-img {
-  max-width: 100%;
-  height: auto;
+  width: 80px;
+  height: 80px;
 }
 
 .preview-right {
