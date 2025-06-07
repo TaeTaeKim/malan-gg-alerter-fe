@@ -90,7 +90,7 @@ function getItemIcon(itemId) {
   display: flex;
   align-items: center;
 
-  background: #2d2d3d;
+  background: #2B2F39;
   border-radius: 10px;
   padding: 4px 12px;
   flex: 1;

@@ -1,16 +1,21 @@
 <template>
   <div class="preview-panel" v-if="store.currentItem">
-    <div class="preview-left">
-      <div class="image-container">
-        <img :src="imageUrl" alt="preview" class="preview-img"/>
-        <a :href="`https://mapleland.gg/item/${store.currentItem.id}`" target="_blank" rel="noopener noreferrer"
-           class="gg-link">
-          <img src="/static/gg.png" alt="GG link" class="gg-icon"/>
-        </a>
-      </div>
+    <div class="preview-item-name">
+      <span>{{store.currentItem.name}}</span>
+      <a :href="`https://mapleland.gg/item/${store.currentItem.id}`" target="_blank" rel="noopener noreferrer" class="preview-item-link">
+        <sp>메랜지지 바로가기</sp>
+      </a>
+      <img src="@/assets/link.png" alt="link icon" class="preview-link-icon"/>
     </div>
-    <div class="preview-right">
-      <OptionSelector @submit="addItem" @back="clearCurrentItem"/>
+    <div class="preview-item-info">
+      <div class="preview-left">
+        <div class="image-container">
+          <img :src="imageUrl" alt="preview" class="preview-img"/>
+        </div>
+      </div>
+      <div class="preview-right">
+        <OptionSelector @submit="addItem" @back="clearCurrentItem"/>
+      </div>
     </div>
   </div>
 </template>
@@ -19,7 +24,6 @@
 import {computed} from 'vue'
 import {useMainStore} from '@/store'
 import OptionSelector from './OptionSelector.vue'
-import SearchBar from "@/components/SearchBar.vue";
 
 const store = useMainStore()
 const imageUrl = computed(() => store.currentItem?.iconUrl)
@@ -38,16 +42,37 @@ function clearCurrentItem() {
 
 <style scoped>
 .preview-panel {
-  display: flex;
-  gap: 20px;
+  margin-top: 20px;
   padding: 20px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
-  background-color: rgb(71 71 111 / var(--tw-bg-opacity, 1));
+  background-color: #343741;
   height: 25vh; /* Fixed height instead of max-height */
   overflow-y: auto;
 }
+.preview-item-name{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.preview-item-name > span{
+  font-weight: bolder;
+  font-size: 20px;
+}
+.preview-item-link{
+  margin: 0 10px 0 10px;
+  font-size: 16px;
+  color: #B0B5C3;
+}
 
+.preview-link-icon{
+  width: 16px;
+  height: 16px;
+}
+.preview-item-info{
+  display: flex;
+  gap: 20px;
+}
 .preview-left {
   flex: 0 0 200px;
   display: flex;
@@ -67,12 +92,6 @@ function clearCurrentItem() {
 }
 
 
-.image-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
 .gg-icon {
   width: 30px;
