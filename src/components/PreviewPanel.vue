@@ -47,7 +47,7 @@ function clearCurrentItem() {
   border: 1px solid #d1d5db;
   border-radius: 8px;
   background-color: #343741;
-  height: 25vh; /* Fixed height instead of max-height */
+  height: 300px; /* Fixed height instead of max-height */
   overflow-y: auto;
 }
 /* 등록 뷰 상단 이름과 메랜지지 링크*/
@@ -73,6 +73,7 @@ function clearCurrentItem() {
 .preview-item-info{
   display: flex;
   justify-content: start;
+  height: 270px;
   gap: 20px;
 }
 /* 등록 뷰 이미지*/
@@ -91,20 +92,6 @@ function clearCurrentItem() {
   flex: 1;
 }
 
-
-
-.gg-icon {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-  transition: transform 0.2s;
-  opacity: 0.8;
-}
-
-.gg-link:hover .gg-icon {
-  transform: scale(1.1);
-  opacity: 1;
-}
 
 /* Adjust SearchBar width inside placeholder */
 .preview-search-placeholder :deep(.search-bar) {
