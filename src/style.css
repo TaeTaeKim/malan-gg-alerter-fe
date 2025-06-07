@@ -31,6 +31,13 @@ a:hover {
   margin-right: .3rem;
 }
 
+.height100{
+  height: 100%;
+}
+.width100{
+  width: 100%;
+}
+
 body {
   margin: 0;
   min-width: 100vw;
