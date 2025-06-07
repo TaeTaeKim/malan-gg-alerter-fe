@@ -82,6 +82,7 @@ button:focus-visible {
   margin: 0;
   text-align: initial;
   box-sizing: border-box;
+  background: #1D1E23;
 }
 
 @media (prefers-color-scheme: light) {

@@ -16,6 +16,7 @@
 
     <div class="main-content">
       <div class="search-section">
+        <SearchBar/>
         <PreviewPanel/>
       </div>
       <div class="items-section">
@@ -33,6 +34,7 @@ import {useMainStore} from '@/store/index'
 import {useAuthStore} from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
+import SearchBar from "@/components/SearchBar.vue";
 
 const router = useRouter()
 const store = useMainStore()
@@ -64,9 +66,12 @@ const openAlarmSettings = () => {
 
 .main-content {
   display: grid;
-  gap: 30px;
+  align-content: start;
+  gap: 15px;
   max-width: 100%; /* Ensure content doesn't overflow */
+  min-height: calc(100vh - 60px - 40px);
   overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-y: visible;
 }
 header {
   display: flex;
@@ -80,7 +85,6 @@ header {
   align-items: center;
   height: 60px;
   color: white;
-  border: 1px solid #333;
 }
 .header-actions {
   display: flex;
@@ -132,7 +136,7 @@ header {
 
 .main-content {
   display: grid;
-  gap: 30px;
+
 }
 .items-section h2 {
   margin-bottom: 20px;
@@ -151,6 +155,11 @@ header {
     gap: 15px;
     text-align: center;
   }
+}
+
+.search-section{
+  height: 400px;
+
 }
 
 </style>
