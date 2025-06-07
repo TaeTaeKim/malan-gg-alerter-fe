@@ -1,29 +1,36 @@
 <template>
   <div class="container">
-    <header>
-      <h1>메랜지지 가격 알림</h1>
-      <button @click="handleLogout" class="logout-btn">로그아웃</button>
+    <header class="app-header">
+      <div class="logo-title">
+        <img src="@/assets/logo.png" alt="Logo" class="logo-image">
+        <h1>매랜지지 알리미</h1>
+      </div>
+      <div class="header-actions">
+        <button @click="openAlarmSettings" class="alarm-btn">
+          <img src="@/assets/alarm.png">
+          <span>알람 시간 설정</span>
+        </button>
+        <button @click="handleLogout" class="logout-btn">로그아웃</button>
+      </div>
     </header>
-    
+
     <div class="main-content">
       <div class="search-section">
-        <PreviewPanel />
+        <PreviewPanel/>
       </div>
-      
       <div class="items-section">
         <h2>등록된 아이템</h2>
-        <RegisteredItemList />
+        <RegisteredItemList/>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useMainStore } from '@/store/index'
-import { useAuthStore } from '@/store/auth'
-import SearchBar from '@/components/SearchBar.vue'
+import {onMounted} from 'vue'
+import {useRouter} from 'vue-router'
+import {useMainStore} from '@/store/index'
+import {useAuthStore} from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
 
@@ -39,8 +46,12 @@ onMounted(async () => {
   await store.fetchRegisteredItems()
 })
 const handleLogout = async () => {
-    await auth.logout()
-    router.push('/login')
+  await auth.logout()
+  router.push('/login')
+}
+
+const openAlarmSettings = () => {
+  // todo
 }
 </script>
 
@@ -49,7 +60,6 @@ const handleLogout = async () => {
   width: min(90%, 1200px); /* More responsive width */
   margin: 0 auto;
   padding: 20px;
-  min-width: 320px;
 }
 
 .main-content {
@@ -58,7 +68,78 @@ const handleLogout = async () => {
   max-width: 100%; /* Ensure content doesn't overflow */
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  color: white;
+  border: 1px solid #333;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-title{
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 12px;
+}
+
+.logo-image{
+  height: 60px;
+  width: auto;
+}
+.alarm-btn,
+.logout-btn{
+  height: 48px;
+  border-radius: 4px;
+  border: none;
+  padding: 8px 16px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 20px;
+}
+.alarm-btn {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: center;
+  background-color: #f57234;
+}
+
+.alarm-btn:hover {
+  background-color: #e0662d;
+}
+
+.logout-btn {
+  background-color: #dc2626;
+}
+
+.logout-btn:hover {
+  background-color: #b91c1c;
+}
+
+.main-content {
+  display: grid;
+  gap: 30px;
+}
+.items-section h2 {
+  margin-bottom: 20px;
+}
+
 /* Add responsive adjustments for smaller screens */
+
 @media (max-width: 768px) {
   .container {
     width: 95%;
@@ -72,39 +153,4 @@ const handleLogout = async () => {
   }
 }
 
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
-
-.logout-btn {
-  padding: 8px 16px;
-  background-color: #dc2626;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.logout-btn:hover {
-  background-color: #b91c1c;
-}
-
-.main-content {
-  display: grid;
-  gap: 30px;
-}
-
-.search-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.items-section h2 {
-  margin-bottom: 20px;
-}
 </style>
