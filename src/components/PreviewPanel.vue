@@ -13,13 +13,6 @@
       <OptionSelector @submit="addItem" @back="clearCurrentItem"/>
     </div>
   </div>
-<!--  current Item 이 없을 때-->
-  <div class="preview-panel preview-search-placeholder" v-else>
-    <div class="placeholder-content">
-      <p>아이템 검색</p>
-      <SearchBar/>
-    </div>
-  </div>
 </template>
 
 <script setup>
@@ -55,24 +48,6 @@ function clearCurrentItem() {
   overflow-y: auto;
 }
 
-.preview-search-placeholder {
-  color: #9ca3af;
-  text-align: center;
-  justify-content: center;
-  display: flex;
-  font-size: 1.1em;
-  height: 25vh; /* Same height as non-placeholder */
-}
-
-.placeholder-content{
-  width: 60%;
-
-}
-.placeholder-content > p{
-  font-size: 1.3em;
-
-}
-
 .preview-left {
   flex: 0 0 200px;
   display: flex;
@@ -91,12 +66,6 @@ function clearCurrentItem() {
   flex: 1;
 }
 
-.preview-search-placeholder {
-  color: #9ca3af;
-  text-align: center;
-  justify-content: center;
-  min-height: 100px;
-}
 
 .image-container {
   position: relative;
@@ -116,10 +85,6 @@ function clearCurrentItem() {
 .gg-link:hover .gg-icon {
   transform: scale(1.1);
   opacity: 1;
-}
-
-.placeholder-content p {
-  margin: 0;
 }
 
 /* Adjust SearchBar width inside placeholder */

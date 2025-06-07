@@ -16,6 +16,7 @@
 
     <div class="main-content">
       <div class="search-section">
+        <SearchBar/>
         <PreviewPanel/>
       </div>
       <div class="items-section">
@@ -33,6 +34,7 @@ import {useMainStore} from '@/store/index'
 import {useAuthStore} from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
+import SearchBar from "@/components/SearchBar.vue";
 
 const router = useRouter()
 const store = useMainStore()
@@ -80,7 +82,6 @@ header {
   align-items: center;
   height: 60px;
   color: white;
-  border: 1px solid #333;
 }
 .header-actions {
   display: flex;
