@@ -66,9 +66,12 @@ const openAlarmSettings = () => {
 
 .main-content {
   display: grid;
-  gap: 30px;
+  align-content: start;
+  gap: 15px;
   max-width: 100%; /* Ensure content doesn't overflow */
+  min-height: calc(100vh - 60px - 40px);
   overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-y: visible;
 }
 header {
   display: flex;
@@ -133,7 +136,7 @@ header {
 
 .main-content {
   display: grid;
-  gap: 30px;
+
 }
 .items-section h2 {
   margin-bottom: 20px;
@@ -152,6 +155,11 @@ header {
     gap: 15px;
     text-align: center;
   }
+}
+
+.search-section{
+  height: 400px;
+
 }
 
 </style>

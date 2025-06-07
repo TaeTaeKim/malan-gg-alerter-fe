@@ -136,7 +136,7 @@ function getItemIcon(itemId) {
   background: #2d2d3d;
   border: 1px solid #374151;
   border-radius: 0 0 8px 8px;
-  max-height: 200px;
+  max-height: 350px;
   overflow-y: auto;
   z-index: 10;
 }
