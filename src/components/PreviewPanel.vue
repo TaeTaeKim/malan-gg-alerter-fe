@@ -44,7 +44,7 @@ function clearCurrentItem() {
 .preview-panel {
   margin-top: 20px;
   padding: 20px;
-  border: 1px solid #d1d5db;
+  border: 1px solid #484B56;
   border-radius: 8px;
   background-color: #343741;
   height: 300px; /* Fixed height instead of max-height */
