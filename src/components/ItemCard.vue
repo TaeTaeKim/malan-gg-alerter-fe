@@ -250,10 +250,17 @@ const otherOptions = itemOptions
   color: white;
   font-weight: bold;
 }
+.edit-delete-btn{
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
 
 .item-btn {
+  width: 50%;
+  border: 1px solid #484B56;
   padding: 0.1em 0.4em;
   background: none;
-  font-size: 1.3em;
+  height: 30px;
 }
 </style>
