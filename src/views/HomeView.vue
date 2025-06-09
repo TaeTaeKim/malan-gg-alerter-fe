@@ -59,7 +59,7 @@ const openAlarmSettings = () => {
 
 <style scoped>
 .container {
-  width: min(90%, 1200px); /* More responsive width */
+  width: min(90%, 980px); /* More responsive width */
   margin: 0 auto;
   padding: 20px;
 }
