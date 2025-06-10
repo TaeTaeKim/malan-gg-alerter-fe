@@ -15,7 +15,7 @@
             placeholder="알람 등록하고 싶은 아이템을 검색하세요"
             class="search-input"
         />
-        <button @click="onSearch">검색</button>
+        <button @click="onSearch" class="search-btn">검색</button>
       </div>
     </div>
     <div class="dropdown" v-if="candidates.length">
@@ -111,7 +111,9 @@ function getItemIcon(itemId) {
   font-size: 20px;
   font-weight: bold;
   color: #A6ACBF;
-
+}
+.search-btn{
+  border: none;
 }
 .search-seperator{
   margin: 0 10px 0 10px;

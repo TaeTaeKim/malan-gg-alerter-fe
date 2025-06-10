@@ -25,35 +25,7 @@
           </template>
         </div>
       </div>
-      <div class="item-card-alarm">
-        <div>
-          <img src="@/assets/question-mark.png" class="item-card-alarm-info" alt="">
-        </div>
-        <div class="item-card-alarm-btn">
-          <div
-              class="toggle-container"
-              :class="{ active: item.alarmOn }"
-              @click="$emit('toggleAlarm')"
-          >
-            <!-- Sound On Icon (left side) -->
-            <img
-                class="icon-sound-on"
-                src="@/assets/soundon.png"
-                alt="Sound On"
-            />
-
-            <!-- Sound Off Icon (right side) -->
-            <img
-                class="icon-sound-off"
-                src="@/assets/soundoff.png"
-                alt="Sound Off"
-            />
-
-            <!-- Moving button -->
-            <div class="toggle-button"></div>
-          </div>
-        </div>
-      </div>
+      <button class="item-btn delete-btn" @click="$emit('delete')">×</button>
     </div>
     <div class="options-container">
       <!-- Other options grid -->
@@ -77,18 +49,20 @@
         </div>
       </div>
     </div>
-    <div class="edit-delete-btn">
+    <div class="edit-alarm-btn">
       <template v-if="!isEditing">
         <button class="item-btn edit-btn" @click="startEdit">편집하기</button>
-        <button class="item-btn delete-btn" @click="$emit('delete')">지우기</button>
+        <button class="item-btn alarm-btn" :class="{ active: item.alarmOn }" @click="$emit('toggleAlarm')">
+          <img :src="item.alarmOn ? onIcon : offIcon" alt="alarm toggle" class="alarm-img" />
+        </button>
       </template>
       <template v-else>
         <button
             v-if="isEditing"
             class="item-btn complete-edit-btn"
             @click="completeEdit"
-        >수정완료</button>
-        <button @click="cancelEdit" class="item-btn">돌아가기</button>
+        >저장 후 닫기</button>
+        <button @click="cancelEdit" class="item-btn cancel-edit-btn">취소</button>
       </template>
     </div>
   </div>
@@ -96,6 +70,8 @@
 <script setup>
 import {itemOptions} from '@/constants/itemOptions'
 import {reactive, ref} from "vue";
+import onIcon from '@/assets/alarm-on.png'
+import offIcon from '@/assets/alarm-off.png'
 
 const props = defineProps({
   item: Object
@@ -137,7 +113,7 @@ function cancelEdit(){
   --tw-bg-opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.2s;
-  height: 245px;
+  height: 270px;
   width: 100%;
   min-width: 200px;
   box-sizing: border-box;
@@ -187,92 +163,20 @@ function cancelEdit(){
   align-items: center;
   font-size: 14px;
 }
+.item-btn{
+  background: none;
+}
+.delete-btn{
+  font-size: 23px;
+  border: none;
+  color: #8C8FA3;
+}
 
 .options-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 10px;
-}
-
-.item-card-alarm {
-  display: flex;
-  align-items: start;
-}
-
-.item-card-alarm-info {
-  padding-top: 5px;
-  padding-right: 2px;
-  height: 20px;
-}
-
-/* Toggle Switch */
-.item-card-alarm-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.toggle-container {
-  position: relative;
-  width: 60px;
-  height: 30px;
-  background: #ccc;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  padding: 0;
-}
-
-.toggle-container.active {
-  background: #FF6239;
-}
-
-.toggle-button {
-  position: absolute;
-  top: 5px;
-  left: 4px;
-  width: 20px;
-  height: 20px;
-  background: white;
-  border-radius: 50%;
-  transition: transform 0.3s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  z-index: 2;
-}
-
-.toggle-container.active .toggle-button {
-  transform: translateX(32px);
-}
-
-.icon-sound-off, .icon-sound-on {
-  position: absolute;
-  top: 48%;
-  transform: translateY(-50%);
-  width: 17px;
-  height: 17px;
-  opacity: 0.6;
-  z-index: 1;
-}
-
-.icon-sound-on {
-  left: 6px;
-}
-
-.icon-sound-off {
-  right: 6px;
-}
-
-.toggle-container.active .icon-sound-on {
-  opacity: 1;
-}
-
-.toggle-container:not(.active) .icon-sound-off {
-  opacity: 1;
-}
-
-.options-container {
-  height: 50%;
 }
 
 .options-grid {
@@ -300,17 +204,45 @@ function cancelEdit(){
   color: white;
   font-weight: bold;
 }
-.edit-delete-btn{
+
+.edit-alarm-btn{
   display: flex;
   justify-content: center;
   gap: 10px;
 }
-
-.item-btn {
-  width: 50%;
+.alarm-btn,.edit-btn, .complete-edit-btn, .cancel-edit-btn{
+  height: 42px;
   border: 1px solid #484B56;
-  padding: 0.1em 0.4em;
-  background: none;
-  height: 30px;
+}
+/* Toggle Switch */
+.alarm-btn {
+  background: #343A4B;
+  width: 22%;
+  transition: background-color 0.3s ease;
+}
+
+.alarm-btn.active {
+  background: #FF6239;
+}
+.alarm-img{
+  height: 20px;
+
+}
+.options-container {
+  height: 50%;
+}
+
+.edit-btn{
+  width: 78%;
+}
+.complete-edit-btn{
+  width: 78%;
+}
+.complete-edit-btn:hover{
+  background: #343A4B;
+  border: none;
+}
+.cancel-edit-btn{
+  width: 22%;
 }
 </style>
