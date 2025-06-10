@@ -45,8 +45,7 @@ function onCompositionEnd(e) {
 }
 
 function onInput(e){
-  const val = e.target.value
-  query.value = val
+  query.value = e.target.value
   if(!isComposing.value){
     candidates.value = store.searchItemCandidates(query.value)
   }
