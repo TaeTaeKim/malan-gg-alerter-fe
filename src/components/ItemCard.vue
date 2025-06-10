@@ -12,8 +12,17 @@
           </a>
         </div>
         <div class="item-card-price">
-          <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03"></img>
-          {{ item.option.price?.toLocaleString() || 0 }} 메소
+          <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03">
+          <template v-if="isEditing">
+            <input
+                type="number"
+                v-model.number="editedOptions.price"
+                style="width: 80px;"
+            /> 메소
+          </template>
+          <template v-else>
+            {{ item.option.price?.toLocaleString() || 0 }} 메소
+          </template>
         </div>
       </div>
       <div class="item-card-alarm">
@@ -54,29 +63,69 @@
             {{ opt.label }}
           </div>
           <div class="option-value">
-            {{ item.option[opt.key] }}
+            <template v-if="isEditing">
+              <input
+                  type="number"
+                  v-model.number="editedOptions[opt.key]"
+                  style="width: 50px;"
+              />
+            </template>
+            <template v-else>
+              {{ item.option[opt.key] }}
+            </template>
           </div>
         </div>
       </div>
     </div>
     <div class="edit-delete-btn">
-      <button class="item-btn edit-btn" @click="$emit('edit')">편집하기</button>
-      <button class="item-btn delete-btn" @click="$emit('delete')">지우기</button>
+      <template v-if="!isEditing">
+        <button class="item-btn edit-btn" @click="startEdit">편집하기</button>
+        <button class="item-btn delete-btn" @click="$emit('delete')">지우기</button>
+      </template>
+      <template v-else>
+        <button
+            v-if="isEditing"
+            class="item-btn complete-edit-btn"
+            @click="completeEdit"
+        >수정완료</button>
+        <button @click="cancelEdit" class="item-btn">돌아가기</button>
+      </template>
     </div>
   </div>
 </template>
 <script setup>
 import {itemOptions} from '@/constants/itemOptions'
+import {reactive, ref} from "vue";
 
 const props = defineProps({
   item: Object
 })
+const emit = defineEmits(["update"]);
+const isEditing = ref(false);
+const editedOptions = reactive({})
 const otherOptions = itemOptions
     .filter(opt => opt.key !== 'price')
     .map(opt => ({
       ...opt,
       label: opt.label.length > 2 ? opt.label.substring(0, 2) : opt.label
     }))
+
+function startEdit(){
+  isEditing.value = true;
+  otherOptions.forEach(opt => {
+    editedOptions[opt.key] = props.item.option[opt.key]
+  });
+
+  editedOptions.price = props.item.option.price;
+
+}
+function completeEdit(){
+  isEditing.value = false;
+  emit('update', {...editedOptions})
+}
+function cancelEdit(){
+  isEditing.value = false;
+}
 </script>
 
 <style scoped>
@@ -127,7 +176,7 @@ const otherOptions = itemOptions
 
 .item-card-name {
   font-weight: bolder;
-  font-size: 20px;
+  font-size: 16px;
   padding-bottom: 10px;
   height: 20px;
 }
@@ -136,6 +185,7 @@ const otherOptions = itemOptions
   display: flex;
   justify-content: start;
   align-items: center;
+  font-size: 14px;
 }
 
 .options-container {

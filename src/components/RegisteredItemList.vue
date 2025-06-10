@@ -6,6 +6,7 @@
       :item="registeredItem"
       @toggleAlarm="store.toggleAlarm(registeredItem.id)"
       @delete = "store.deleteItem(registeredItem.id)"
+      @update = "store.updateItem(registeredItem.id, $event)"
     />
   </div>
 </template>

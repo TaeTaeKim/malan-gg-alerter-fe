@@ -4,7 +4,7 @@ on:
     branches:
       - main
 env:
-  MINOR_VERSION: 3
+  MINOR_VERSION: 4
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
