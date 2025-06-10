@@ -94,13 +94,13 @@ export const useMainStore = defineStore('main', {
     },
 
     /** 5) 수정 (PATCH) */
-    async updateItem(itemId, newOption) {
+    async updateItem(alertId, newOption) {
       await axios.patch(
-        `${__API_PREFIX__}/alerter`,
+        `${__API_PREFIX__}/api/alerter`,
         newOption,
-        { params: { itemId } }
+        { params: { alertId } }
       )
-      const it = this.registeredItems.find(i => i.id === itemId)
+      const it = this.registeredItems.find(i => i.id === alertId)
       if (it) it.option = newOption
     },
 
