@@ -3,7 +3,7 @@
     <div class="preview-item-name">
       <span>{{store.currentItem.name}}</span>
       <a :href="`https://mapleland.gg/item/${store.currentItem.id}`" target="_blank" rel="noopener noreferrer" class="preview-item-link">
-        <sp>메랜지지 바로가기</sp>
+        <span>메랜지지 바로가기</span>
       </a>
       <img src="@/assets/link.png" alt="link icon" class="preview-link-icon"/>
     </div>
@@ -91,7 +91,6 @@ function clearCurrentItem() {
 .preview-right {
   flex: 1;
 }
-
 
 /* Adjust SearchBar width inside placeholder */
 .preview-search-placeholder :deep(.search-bar) {

@@ -51,7 +51,9 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
+.width100{
+  width: 100%;
+}
 button {
   border-radius: 8px;
   font-size: 1em;

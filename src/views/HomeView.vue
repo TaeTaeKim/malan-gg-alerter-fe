@@ -6,10 +6,17 @@
         <h1>매랜지지 알리미</h1>
       </div>
       <div class="header-actions">
-        <button @click="openAlarmSettings" class="alarm-btn">
-          <img src="@/assets/alarm.png">
-          <span>알람 시간 설정</span>
-        </button>
+        <div class="global-alarm-setting">
+          <button @click="openAlarmSettings" class="global-alarm-btn">
+            <img src="@/assets/alarm.png">
+            <span>알람 시간 설정</span>
+          </button>
+          <GlobalAlarmSettingsModal
+              :is-open="isAlarmSettingsOpen"
+              @close="closeAlarmSettings"
+          />
+
+        </div>
         <button @click="handleLogout" class="logout-btn">로그아웃</button>
       </div>
     </header>
@@ -28,13 +35,14 @@
 </template>
 
 <script setup>
-import {onMounted} from 'vue'
+import {onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router'
 import {useMainStore} from '@/store/index'
 import {useAuthStore} from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
 import SearchBar from "@/components/SearchBar.vue";
+import GlobalAlarmSettingsModal from "@/components/GlobalAlarmSettingsModal.vue";
 
 const router = useRouter()
 const store = useMainStore()
@@ -52,8 +60,18 @@ const handleLogout = async () => {
   router.push('/login')
 }
 
+const isAlarmSettingsOpen = ref(false)
+
 const openAlarmSettings = () => {
-  // todo
+  if(isAlarmSettingsOpen.value) {
+    isAlarmSettingsOpen.value=false
+  }else {
+    isAlarmSettingsOpen.value=true
+  }
+}
+
+const closeAlarmSettings = () => {
+  isAlarmSettingsOpen.value = false
 }
 </script>
 
@@ -103,7 +121,10 @@ header {
   height: 60px;
   width: auto;
 }
-.alarm-btn,
+.global-alarm-setting{
+  position: relative;
+}
+.global-alarm-btn,
 .logout-btn{
   height: 48px;
   border-radius: 4px;
@@ -114,7 +135,7 @@ header {
   font-weight: 600;
   font-size: 20px;
 }
-.alarm-btn {
+.global-alarm-btn {
   display: flex;
   justify-content: space-between;
   gap: 5px;
@@ -122,7 +143,7 @@ header {
   background-color: #f57234;
 }
 
-.alarm-btn:hover {
+.global-alarm-btn:hover {
   background-color: #e0662d;
 }
 
