@@ -4,7 +4,7 @@ on:
     branches:
       - main
 env:
-  MINOR_VERSION: 4
+  MINOR_VERSION: 0
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.CONTAINER_REGISTRY_URL }}/malan-alerter-fe:0.${{ env.MINOR_VERSION }}.${{ steps.git-commit-sha.outputs.SHA_SHORT }}
+            ${{ secrets.CONTAINER_REGISTRY_URL }}/malan-alerter-fe:1.${{ env.MINOR_VERSION }}.${{ steps.git-commit-sha.outputs.SHA_SHORT }}
           #            ${{ secrets.CONTAINER_REGISTRY_URL }}/malan-alerter-be:latest
           platforms: linux/arm64
   #          cache-from: type=registry,ref=${{ secrets.CONTAINER_REGISTRY_URL }}/malan-alerter-be:latest
