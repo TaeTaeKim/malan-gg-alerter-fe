@@ -3,7 +3,7 @@
     <div class="preview-item-name">
       <span>{{store.currentItem.name}}</span>
       <a :href="`https://mapleland.gg/item/${store.currentItem.id}`" target="_blank" rel="noopener noreferrer" class="preview-item-link">
-        <sp>메랜지지 바로가기</sp>
+        <span>메랜지지 바로가기</span>
       </a>
       <img src="@/assets/link.png" alt="link icon" class="preview-link-icon"/>
     </div>
@@ -43,11 +43,11 @@ function clearCurrentItem() {
 <style scoped>
 .preview-panel {
   margin-top: 20px;
-  padding: 20px;
+  padding: 20px 20px 26px 30px;
   border: 1px solid #484B56;
   border-radius: 8px;
-  background-color: #343741;
-  height: 300px; /* Fixed height instead of max-height */
+  background-color: #404552;
+  height: 310px; /* Fixed height instead of max-height */
   overflow-y: auto;
 }
 /* 등록 뷰 상단 이름과 메랜지지 링크*/
@@ -91,7 +91,6 @@ function clearCurrentItem() {
 .preview-right {
   flex: 1;
 }
-
 
 /* Adjust SearchBar width inside placeholder */
 .preview-search-placeholder :deep(.search-bar) {

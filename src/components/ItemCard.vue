@@ -196,7 +196,7 @@ function cancelEdit(){
 
 .option-label {
   color: #8C8FA3;
-  width: 28px;
+  width: 32px;
   margin-right: 10px;
 }
 
@@ -212,7 +212,7 @@ function cancelEdit(){
 }
 .alarm-btn,.edit-btn, .complete-edit-btn, .cancel-edit-btn{
   height: 42px;
-  border: 1px solid #484B56;
+  border: 1px solid #515972;
 }
 /* Toggle Switch */
 .alarm-btn {
@@ -235,14 +235,19 @@ function cancelEdit(){
 .edit-btn{
   width: 78%;
 }
+.edit-btn:hover{
+  background: #515972;
+}
 .complete-edit-btn{
   width: 78%;
 }
 .complete-edit-btn:hover{
-  background: #343A4B;
-  border: none;
+  background: #515972;
 }
 .cancel-edit-btn{
   width: 22%;
+}
+.cancel-edit-btn:hover{
+  background: #b91c1c;
 }
 </style>

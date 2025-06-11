@@ -3,8 +3,6 @@
     <div class="search-bar">
       <div class="search-input-wrapper">
         <img src="@/assets/search-icon.png" alt="search icon" class="search-icon">
-        <span class="search-label">거래 품목</span>
-        <span class="search-seperator"> | </span>
         <input
             type="text"
             :value=query
@@ -90,7 +88,7 @@ function getItemIcon(itemId) {
   display: flex;
   align-items: center;
 
-  background: #2B2F39;
+  background: #343741;
   border-radius: 10px;
   padding: 4px 12px;
   flex: 1;
@@ -106,18 +104,9 @@ function getItemIcon(itemId) {
   margin: 0 20px 0 20px;
   flex-shrink: 0;
 }
-.search-label{
-  font-size: 20px;
-  font-weight: bold;
-  color: #A6ACBF;
-}
+
 .search-btn{
   border: none;
-}
-.search-seperator{
-  margin: 0 10px 0 10px;
-  font-weight: bolder;
-  color: #A6ACBF;
 }
 .search-input{
   background: transparent;
@@ -128,6 +117,9 @@ function getItemIcon(itemId) {
   min-width: 0;
   font-size: 20px;
 }
+.search-input::placeholder{
+  color: #888fa1;
+}
 
 .dropdown {
   position: absolute;
@@ -135,9 +127,10 @@ function getItemIcon(itemId) {
   left: 50%;
   margin-top: 6px;
   transform: translateX(-50%);
-  background: #2d2d3d;
-  border: 1px solid #374151;
-  border-radius: 0 0 8px 8px;
+  background: #343741;
+  border: 1px solid #515972;
+  box-shadow: black 0 0 10px;
+  border-radius: 8px;
   max-height: 350px;
   overflow-y: auto;
   z-index: 10;
