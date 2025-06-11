@@ -196,7 +196,7 @@ function cancelEdit(){
 
 .option-label {
   color: #8C8FA3;
-  width: 28px;
+  width: 32px;
   margin-right: 10px;
 }
 

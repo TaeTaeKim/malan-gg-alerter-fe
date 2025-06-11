@@ -1,11 +1,24 @@
 <script setup>
 import MultiRangeSlider from "@/components/MultiRangeSlider.vue";
 import VueToggles from "vue-toggles"
+import {useUserStore} from "@/store/user.js";
+import {onMounted} from "vue";
 
+const userStore = useUserStore();
 defineProps({
-  isOpen: Boolean
+  isOpen: Boolean,
+})
+onMounted(() =>{
+  userStore.getCurrentUserInfo();
 })
 
+function toggleUserAlarm(){
+  userStore.toggleCurrentUserAlarm()
+}
+
+function updateTime(min, max) {
+  userStore.updateUserAlarmTime(min, max)
+}
 </script>
 
 <template>
@@ -24,6 +37,8 @@ defineProps({
               :width="50"
               :height="22"
               checkedBg="#FF6239"
+              @click="toggleUserAlarm"
+              :value="userStore.currentUser.isAlarm"
           />
         </div>
       </div>
@@ -40,7 +55,10 @@ defineProps({
       <div class="global-desc">
         알람 받고 싶은 시간을 설정할 수 있어요.
       </div>
-      <MultiRangeSlider/>
+      <MultiRangeSlider
+          :user="userStore.currentUser"
+          @update="updateTime"
+      />
     </div>
 
     <!-- Add your alarm settings here -->
@@ -51,7 +69,7 @@ defineProps({
 .modal-overlay {
   top: 58px;
   border-radius: 10px;
-  left: -120px;
+  left: -100px;
   padding: 10px;
   border: 1px solid #484B56;
   box-shadow: black 0 0 10px;

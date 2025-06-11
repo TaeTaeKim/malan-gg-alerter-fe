@@ -17,7 +17,8 @@
           :step="step"
           v-model="minMinutes"
           class="slider-input slider-min"
-          @input="updateMin"
+          @input="handleMinInput"
+          @change="emitUpdate"
       />
 
       <input
@@ -27,7 +28,8 @@
           :step="step"
           v-model="maxMinutes"
           class="slider-input slider-max"
-          @input="updateMax"
+          @input="handleMaxInput"
+          @change="emitUpdate"
       />
     </div>
 
@@ -42,17 +44,21 @@
 export default {
   name: 'TimeRangeSlider',
   props: {
+    user:{
+      type: Object,
+      required: true
+    },
     step: {
       type: Number,
       default: 15 // 15 minutes step by default
     },
     minDefault: {
       type: String,
-      default: '08:00'
+      default: '00:00'
     },
     maxDefault: {
       type: String,
-      default: '18:00'
+      default: '24:00'
     }
   },
   data() {
@@ -70,10 +76,13 @@ export default {
     }
   },
   methods: {
+    // Sting 00:00 을 숫자로 변환하는 메소드
     timeToMinutes(timeString) {
       const [hours, minutes] = timeString.split(':').map(Number)
       return hours * 60 + minutes
     },
+
+    // 숫자를 HH:mm 형태로 변환하는 메소드
     formatTime(minutes) {
       const hours = Math.floor(minutes / 60)
       const mins = minutes % 60
@@ -96,14 +105,41 @@ export default {
         min: this.formatTime(this.minMinutes),
         max: this.formatTime(this.maxMinutes)
       })
+    },
+    initializeTimeValues(){
+      if (this.user.minAlarmTime && this.user.maxAlarmTime) {
+        this.minMinutes = this.formatTime(this.user.minAlarmTime)
+        this.maxMinutes = this.formatTime(this.user.maxAlarmTime)
+      }else {
+        this.minMinutes= this.timeToMinutes(this.minDefault)
+        this.maxMinutes= this.timeToMinutes(this.maxDefault)
+      }
+    },
+    handleMinInput() {
+      if (parseInt(this.minMinutes) > parseInt(this.maxMinutes)) {
+        this.minMinutes = this.maxMinutes
+      }
+    },
+
+    handleMaxInput() {
+      if (parseInt(this.maxMinutes) < parseInt(this.minMinutes)) {
+        this.maxMinutes = this.minMinutes
+      }
+    },
+
+    emitUpdate() {
+      this.$emit('update', {
+        min: this.formatTime(this.minMinutes),
+        max: this.formatTime(this.maxMinutes)
+      })
     }
   },
   watch: {
-    minDefault(newVal) {
-      this.minMinutes = this.timeToMinutes(newVal)
-    },
-    maxDefault(newVal) {
-      this.maxMinutes = this.timeToMinutes(newVal)
+    user: {
+      immediate: true,
+      handler(){
+        this.initializeTimeValues()
+      }
     }
   }
 }
@@ -123,7 +159,7 @@ export default {
 
 .slider-track {
   position: absolute;
-  width: 100%;
+
   height: 6px;
   background: #ddd;
   border-radius: 3px;
@@ -146,6 +182,9 @@ export default {
   -moz-appearance: none;
   appearance: none;
   outline: none;
+}
+.slider-min{
+  left: -3px;
 }
 
 .slider-input::-webkit-slider-thumb {

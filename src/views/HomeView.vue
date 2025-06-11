@@ -7,13 +7,12 @@
       </div>
       <div class="header-actions">
         <div class="global-alarm-setting">
-          <button @click="openAlarmSettings" class="global-alarm-btn">
+          <button @click="toggleAlarmSetting" class="global-alarm-btn">
             <img src="@/assets/alarm.png">
             <span>알람 시간 설정</span>
           </button>
           <GlobalAlarmSettingsModal
               :is-open="isAlarmSettingsOpen"
-              @close="closeAlarmSettings"
           />
 
         </div>
@@ -62,16 +61,12 @@ const handleLogout = async () => {
 
 const isAlarmSettingsOpen = ref(false)
 
-const openAlarmSettings = () => {
+const toggleAlarmSetting = () => {
   if(isAlarmSettingsOpen.value) {
     isAlarmSettingsOpen.value=false
   }else {
     isAlarmSettingsOpen.value=true
   }
-}
-
-const closeAlarmSettings = () => {
-  isAlarmSettingsOpen.value = false
 }
 </script>
 
