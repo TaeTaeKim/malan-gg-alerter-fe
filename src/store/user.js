@@ -18,6 +18,9 @@ export const useUserStore = defineStore('userStore', {
 
         async toggleCurrentUserAlarm(){
             await axios.patch(`${__API_PREFIX__}/api/user/alarm`)
+            if(this.currentUser){
+                this.currentUser.isAlarm = !this.currentUser.isAlarm
+            }
         },
         async updateUserAlarmTime(minTime, maxTime){
             await axios.patch(`${__API_PREFIX__}/api/user/alarmTime`, {
