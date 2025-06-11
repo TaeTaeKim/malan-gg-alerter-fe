@@ -8,7 +8,7 @@ const props = defineProps({
 <template>
   <div class="support-modal" v-if="isOpen">
 
-    <img src="@/assets/support-qr.jpg" alt="support-qr" class="support-qr-img">
+    <img src="/support-qr.jpg" alt="support-qr" class="support-qr-img">
 
     <div class="support-msg">
       <h2>소중한 후원 감사합니다</h2>

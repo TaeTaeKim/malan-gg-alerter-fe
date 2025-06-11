@@ -5,7 +5,7 @@
       <a :href="`https://mapleland.gg/item/${store.currentItem.id}`" target="_blank" rel="noopener noreferrer" class="preview-item-link">
         <span>메랜지지 바로가기</span>
       </a>
-      <img src="@/assets/link.png" alt="link icon" class="preview-link-icon"/>
+      <img src="/link.png" alt="link icon" class="preview-link-icon"/>
     </div>
     <div class="preview-item-info">
       <div class="preview-left">
