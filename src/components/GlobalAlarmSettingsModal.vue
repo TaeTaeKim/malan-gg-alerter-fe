@@ -2,14 +2,17 @@
 import MultiRangeSlider from "@/components/MultiRangeSlider.vue";
 import VueToggles from "vue-toggles"
 import {useUserStore} from "@/store/user.js";
-import {onMounted} from "vue";
+import {onMounted, computed} from "vue";
 
 const userStore = useUserStore();
-defineProps({
+const props = defineProps({
   isOpen: Boolean,
 })
 onMounted(() =>{
   userStore.getCurrentUserInfo();
+})
+const isAlarmEnabled = computed(() => {
+  return userStore.currentUser?.isAlarm ?? false
 })
 
 function toggleUserAlarm(){
@@ -38,7 +41,7 @@ function updateTime(min, max) {
               :height="22"
               checkedBg="#FF6239"
               @click="toggleUserAlarm"
-              :value="userStore.currentUser.isAlarm"
+              :value="isAlarmEnabled"
           />
         </div>
       </div>
