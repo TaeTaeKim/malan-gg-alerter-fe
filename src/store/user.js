@@ -24,6 +24,10 @@ export const useUserStore = defineStore('userStore', {
                 minTime: minTime,
                 maxTime: maxTime
             })
+            if (this.currentUser) {
+                this.currentUser.minAlarmTime = minTime
+                this.currentUser.maxAlarmTime = maxTime
+            }
 
         }
 
