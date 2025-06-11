@@ -53,18 +53,18 @@ export default {
       default: 15 // 15 minutes step by default
     },
     minDefault: {
-      type: String,
-      default: '00:00'
+      type: Number,
+      default: 0
     },
     maxDefault: {
-      type: String,
-      default: '24:00'
+      type: Number,
+      default: 1440
     }
   },
   data() {
     return {
-      minMinutes: this.timeToMinutes(this.minDefault),
-      maxMinutes: this.timeToMinutes(this.maxDefault)
+      minMinutes: this.minDefault,
+      maxMinutes: this.maxDefault
     }
   },
   computed: {
@@ -76,11 +76,6 @@ export default {
     }
   },
   methods: {
-    // Sting 00:00 을 숫자로 변환하는 메소드
-    timeToMinutes(timeString) {
-      const [hours, minutes] = timeString.split(':').map(Number)
-      return hours * 60 + minutes
-    },
 
     // 숫자를 HH:mm 형태로 변환하는 메소드
     formatTime(minutes) {
@@ -88,31 +83,13 @@ export default {
       const mins = minutes % 60
       return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`
     },
-    updateMin() {
-      if (parseInt(this.minMinutes) > parseInt(this.maxMinutes)) {
-        this.minMinutes = this.maxMinutes
-      }
-      this.$emit('update', {
-        min: this.formatTime(this.minMinutes),
-        max: this.formatTime(this.maxMinutes)
-      })
-    },
-    updateMax() {
-      if (parseInt(this.maxMinutes) < parseInt(this.minMinutes)) {
-        this.maxMinutes = this.minMinutes
-      }
-      this.$emit('update', {
-        min: this.formatTime(this.minMinutes),
-        max: this.formatTime(this.maxMinutes)
-      })
-    },
     initializeTimeValues(){
-      if (this.user.minAlarmTime && this.user.maxAlarmTime) {
-        this.minMinutes = this.formatTime(this.user.minAlarmTime)
-        this.maxMinutes = this.formatTime(this.user.maxAlarmTime)
+      if (this.user?.minAlarmTime !== undefined && this.user?.maxAlarmTime !== undefined) {
+        this.minMinutes = Number(this.user.minAlarmTime)
+        this.maxMinutes = Number(this.user.maxAlarmTime)
       }else {
-        this.minMinutes= this.timeToMinutes(this.minDefault)
-        this.maxMinutes= this.timeToMinutes(this.maxDefault)
+        this.minMinutes= this.minDefault
+        this.maxMinutes= this.maxDefault
       }
     },
     handleMinInput() {
@@ -129,8 +106,8 @@ export default {
 
     emitUpdate() {
       this.$emit('update', {
-        min: this.formatTime(this.minMinutes),
-        max: this.formatTime(this.maxMinutes)
+        minTime: this.minMinutes,
+        maxTime: this.maxMinutes
       })
     }
   },

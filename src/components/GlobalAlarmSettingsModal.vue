@@ -19,8 +19,8 @@ function toggleUserAlarm(){
   userStore.toggleCurrentUserAlarm()
 }
 
-function updateTime(min, max) {
-  userStore.updateUserAlarmTime(min, max)
+function updateTime(updateTime) {
+  userStore.updateUserAlarmTime(updateTime.minTime, updateTime.maxTime)
 }
 </script>
 
