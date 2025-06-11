@@ -75,7 +75,7 @@ function updateTime(min, max) {
   box-shadow: black 0 0 10px;
   width: 330px;
   height: 300px;
-  background: #2C3039;
+  background: #404552;
   display: grid;
   position: absolute;
   justify-content: center;

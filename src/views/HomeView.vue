@@ -6,15 +6,16 @@
         <h1>매랜지지 알리미</h1>
       </div>
       <div class="header-actions">
+        <div class="support-container">
+          <button class="support-btn" @click="toggleSupport">💸 후원하기</button>
+          <SupportModal :is-open="isSupportOpen"/>
+        </div>
         <div class="global-alarm-setting">
           <button @click="toggleAlarmSetting" class="global-alarm-btn">
-            <img src="@/assets/alarm.png">
+            <img src="@/assets/alarm-on.png">
             <span>알람 시간 설정</span>
           </button>
-          <GlobalAlarmSettingsModal
-              :is-open="isAlarmSettingsOpen"
-          />
-
+          <GlobalAlarmSettingsModal :is-open="isAlarmSettingsOpen"/>
         </div>
         <button @click="handleLogout" class="logout-btn">로그아웃</button>
       </div>
@@ -42,6 +43,7 @@ import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
 import SearchBar from "@/components/SearchBar.vue";
 import GlobalAlarmSettingsModal from "@/components/GlobalAlarmSettingsModal.vue";
+import SupportModal from "@/components/SupportModal.vue";
 
 const router = useRouter()
 const store = useMainStore()
@@ -60,12 +62,21 @@ const handleLogout = async () => {
 }
 
 const isAlarmSettingsOpen = ref(false)
+const isSupportOpen = ref(false)
 
 const toggleAlarmSetting = () => {
   if(isAlarmSettingsOpen.value) {
     isAlarmSettingsOpen.value=false
   }else {
     isAlarmSettingsOpen.value=true
+  }
+}
+
+const toggleSupport= () =>{
+  if(isSupportOpen.value) {
+    isSupportOpen.value=false
+  }else {
+    isSupportOpen.value=true
   }
 }
 </script>
@@ -102,7 +113,7 @@ header {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 
 .logo-title{
@@ -116,22 +127,40 @@ header {
   height: 60px;
   width: auto;
 }
+.support-container{
+  position: relative;
+  border-radius: 8px;
+}
+.support-btn{
+  padding: 3px 12px 3px 12px;
+  color: white;
+  font-weight: bolder;
+  font-size: 18px;
+  height: 48px;
+  border: 1px solid #b9bcbd;
+}
 .global-alarm-setting{
   position: relative;
 }
 .global-alarm-btn,
 .logout-btn{
   height: 48px;
-  border-radius: 4px;
+  border-radius: 8px;
   border: none;
-  padding: 8px 16px;
   color: white;
   cursor: pointer;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 18px;
+}
+.logout-btn{
+  padding: 1px 10px 1px 10px;
+}
+.global-alarm-btn > img{
+  height: 24px;
 }
 .global-alarm-btn {
   display: flex;
+  padding: 8px 16px 8px 12px;
   justify-content: space-between;
   gap: 5px;
   align-items: center;
@@ -142,9 +171,6 @@ header {
   background-color: #e0662d;
 }
 
-.logout-btn {
-  background-color: #dc2626;
-}
 
 .logout-btn:hover {
   background-color: #b91c1c;
