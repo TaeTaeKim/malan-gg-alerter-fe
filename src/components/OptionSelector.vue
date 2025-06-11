@@ -82,7 +82,7 @@ function onSubmit() {
   font-size: 15px
 }
 .option-item{
-  margin-right: 30px;
+  margin-right: 20px;
 }
 .option-item label {
   display: block;
@@ -90,7 +90,7 @@ function onSubmit() {
   margin-bottom: 2px;
 }
 .option-input{
-  height: 43px;
+  height: 42px;
   width: 100%;
   background-color: #2B2F39;
   border: none;
@@ -111,12 +111,13 @@ function onSubmit() {
 
 .button-group {
   display: flex;
-  gap: 20px;
-  margin-top: 15px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .button-group >button{
-  height: 45px;
+  height: 42px;
+  border-radius: 8px;
   padding: 0 15px 0 15px;
 }
 

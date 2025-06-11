@@ -91,7 +91,7 @@ const toggleSupport= () =>{
 .main-content {
   display: grid;
   align-content: start;
-  gap: 15px;
+  gap: 40px;
   max-width: 100%; /* Ensure content doesn't overflow */
   min-height: calc(100vh - 60px - 40px);
   overflow-x: hidden; /* Prevent horizontal scroll */
@@ -176,10 +176,6 @@ header {
   background-color: #b91c1c;
 }
 
-.main-content {
-  display: grid;
-
-}
 .items-section h2 {
   margin-bottom: 20px;
 }

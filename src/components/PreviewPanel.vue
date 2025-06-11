@@ -43,11 +43,11 @@ function clearCurrentItem() {
 <style scoped>
 .preview-panel {
   margin-top: 20px;
-  padding: 20px;
+  padding: 20px 20px 26px 30px;
   border: 1px solid #484B56;
   border-radius: 8px;
-  background-color: #343741;
-  height: 300px; /* Fixed height instead of max-height */
+  background-color: #404552;
+  height: 310px; /* Fixed height instead of max-height */
   overflow-y: auto;
 }
 /* 등록 뷰 상단 이름과 메랜지지 링크*/
