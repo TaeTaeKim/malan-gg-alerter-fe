@@ -18,6 +18,12 @@
       </div>
     </div>
   </div>
+  <div class="preview-panel-msg" v-else>
+    <img src="/static/preview-img.png" alt="">
+    <div style="color:#888fa1; font-size: 20px">
+      거래하고 싶은 아이템 옵션과 가격을 등록하고<br>디스코드 알림으로 빠르게 거래해보세요!
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -50,6 +56,22 @@ function clearCurrentItem() {
   height: 310px; /* Fixed height instead of max-height */
   overflow-y: auto;
 }
+.preview-panel-msg{
+  margin-top: 20px;
+  padding: 20px 20px 26px 30px;
+  border-radius: 8px;
+  background: #1D1E23;
+  height: 310px; /* Fixed height instead of max-height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.preview-panel-msg>img{
+  height: 70px;
+}
+
 /* 등록 뷰 상단 이름과 메랜지지 링크*/
 .preview-item-name{
   display: flex;
