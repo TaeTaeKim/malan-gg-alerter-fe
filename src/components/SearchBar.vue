@@ -10,6 +10,7 @@
             @compositionStart="onCompositionStart"
             @compositionEnd="onCompositionEnd"
             @keyup.enter="onSearch"
+            @keydown="onKeyDown"
             placeholder="알람 등록하고 싶은 아이템을 검색하세요"
             class="search-input"
         />
@@ -17,7 +18,13 @@
       </div>
     </div>
     <div class="dropdown" v-show="candidates.length">
-      <div v-for="item in candidates" :key="item.id" @click="onClick(item)" class="dropdown-item">
+      <div
+          v-for="(item, index) in candidates"
+          :key="item.id"
+          @click="onClick(item)"
+          class="dropdown-item"
+          :class="{'selected' : index === selectedIndex }"
+      >
         <img :src="getItemIcon(item.id)" alt="item icon" class="candidate-icon">
         {{item.nameKorean}}
       </div>
@@ -32,6 +39,33 @@ const query = ref('')
 const isComposing = ref(false)
 const store = useMainStore()
 const candidates = ref([])
+const selectedIndex = ref(-1)
+
+// dropdown keyboard navigation
+function onKeyDown(e){
+  if(!candidates.value.length)return
+
+  switch (e.key){
+    case 'ArrowDown':
+      e.preventDefault()
+      selectedIndex.value = (selectedIndex.value + 1) % candidates.value.length
+      break
+    case 'ArrowUp':
+      e.preventDefault()
+      selectedIndex.value = selectedIndex.value <= 0
+          ? candidates.value.length - 1
+          : selectedIndex.value - 1
+      break
+    case 'Enter':
+      if (selectedIndex.value >= 0) {
+        onClick(candidates.value[selectedIndex.value])
+        selectedIndex.value = -1
+      }
+      break
+  }
+}
+
+// 유저 한글 입력시에 글자 조합 이슈 해결을 위한 메소드들
 function onCompositionStart(){
   isComposing.value = true
 }
@@ -49,8 +83,10 @@ function onInput(e){
   }
 }
 
+// 검색 클릭시에 동작하는 메소드
 function onSearch() {
   store.fetchItem(query.value)
+  candidates.value = []
 }
 
 // 검색 후보 중 클릭시 검색어를 해당 후보의 이름으로 변경
@@ -148,6 +184,9 @@ function getItemIcon(itemId) {
 
 .dropdown-item:hover {
   background: #374151;
+}
+.dropdown-item.selected {
+  background: #055fec;
 }
 
 .candidate-icon {

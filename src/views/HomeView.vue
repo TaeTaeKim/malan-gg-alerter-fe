@@ -12,7 +12,7 @@
         </div>
         <div class="global-alarm-setting">
           <button @click="toggleAlarmSetting" class="global-alarm-btn">
-            <img src="@/assets/alarm-on.png">
+            <img src="@/assets/alarm-on.png" alt="alarm-on">
             <span>알람 시간 설정</span>
           </button>
           <GlobalAlarmSettingsModal :is-open="isAlarmSettingsOpen"/>
@@ -65,19 +65,11 @@ const isAlarmSettingsOpen = ref(false)
 const isSupportOpen = ref(false)
 
 const toggleAlarmSetting = () => {
-  if(isAlarmSettingsOpen.value) {
-    isAlarmSettingsOpen.value=false
-  }else {
-    isAlarmSettingsOpen.value=true
-  }
+  isAlarmSettingsOpen.value = !isAlarmSettingsOpen.value;
 }
 
 const toggleSupport= () =>{
-  if(isSupportOpen.value) {
-    isSupportOpen.value=false
-  }else {
-    isSupportOpen.value=true
-  }
+  isSupportOpen.value = !isSupportOpen.value;
 }
 </script>
 
@@ -120,11 +112,11 @@ header {
   display: flex;
   align-items: center;
   height: 100%;
-  gap: 12px;
+  gap: 6px;
 }
 
 .logo-image{
-  height: 60px;
+  height: 56px;
   width: auto;
 }
 .support-container{
