@@ -134,6 +134,7 @@ header {
 .support-btn{
   padding: 3px 12px 3px 12px;
   color: white;
+  background: #1D1E23;
   font-weight: bolder;
   font-size: 18px;
   height: 48px;
@@ -154,6 +155,7 @@ header {
 }
 .logout-btn{
   padding: 1px 10px 1px 10px;
+  background: #1D1E23;
 }
 .global-alarm-btn > img{
   height: 24px;

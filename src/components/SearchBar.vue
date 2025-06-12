@@ -107,6 +107,8 @@ function getItemIcon(itemId) {
 
 .search-btn{
   border: none;
+  background: #343741;
+  color: white;
 }
 .search-input{
   background: transparent;

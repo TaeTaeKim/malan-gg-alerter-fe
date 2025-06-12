@@ -234,18 +234,24 @@ function cancelEdit(){
 
 .edit-btn{
   width: 78%;
+  background: #343741;
+  color: white;
 }
 .edit-btn:hover{
   background: #515972;
 }
 .complete-edit-btn{
   width: 78%;
+  color: white;
+  background: #343741;
 }
 .complete-edit-btn:hover{
   background: #515972;
 }
 .cancel-edit-btn{
   width: 22%;
+  color: white;
+  background: #343741;
 }
 .cancel-edit-btn:hover{
   background: #b91c1c;
