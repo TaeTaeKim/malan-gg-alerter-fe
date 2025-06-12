@@ -3,7 +3,7 @@
     <header class="app-header">
       <div class="logo-title">
         <img src="@/assets/logo.png" alt="Logo" class="logo-image">
-        <h1>매랜지지 알리미</h1>
+        <h1>메랜지지 알리미</h1>
       </div>
       <div class="header-actions">
         <div class="support-container">

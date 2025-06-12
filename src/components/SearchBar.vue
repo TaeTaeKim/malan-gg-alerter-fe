@@ -16,7 +16,7 @@
         <button @click="onSearch" class="search-btn">검색</button>
       </div>
     </div>
-    <div class="dropdown" v-if="candidates.length">
+    <div class="dropdown" v-show="candidates.length">
       <div v-for="item in candidates" :key="item.id" @click="onClick(item)" class="dropdown-item">
         <img :src="getItemIcon(item.id)" alt="item icon" class="candidate-icon">
         {{item.nameKorean}}
