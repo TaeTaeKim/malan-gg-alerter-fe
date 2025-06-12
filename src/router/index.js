@@ -4,9 +4,9 @@ import HomeView from '@/views/HomeView.vue'
 import AuthCallBack from "@/views/AuthCallBack.vue";
 import { useAuthStore } from '@/store/auth'
 
-
+const base = import.meta.env.PROD ? '/malan-alerter/' : '/'
 const router = createRouter({
-    history: createWebHistory(import.meta.env.PROD?'/malan-alerter/' : '/'),
+    history: createWebHistory(base),
     routes: [
         {
             path: '/',
@@ -28,7 +28,7 @@ router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
   
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    next('/login')
+    next(base+'login')
   } else {
     next()
   }
