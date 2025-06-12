@@ -28,8 +28,17 @@ export const useMainStore = defineStore('main', {
     /** 2) 검색어에 매칭되는 후보 추출 (optional helper) */
     searchItemCandidates(query) {
       if (!query) return []
-      const q = query.toLowerCase()
-      return this.allItems.filter(i =>i.nameKorean.includes(q)).slice(0, 10)
+      const q = query.toLowerCase().replace(/\s+/g, '')
+
+      return this.allItems.filter(item => {
+        // Remove spaces from item name and create a normalized version
+        const normalizedName = item.nameKorean.replace(/\s+/g, '').toLowerCase()
+        // Also create English-only version for matching English prefixes
+        const englishPrefix = item.nameKorean.match(/^[a-zA-Z]+/)?.[0]?.toLowerCase() || ''
+
+        return normalizedName.includes(q) || // Match normalized name
+            (englishPrefix && q.startsWith(englishPrefix)) // Match English prefix
+      }).slice(0, 10)
     },
 
     /** 3) 아이콘 URL 반환 헬퍼 */
