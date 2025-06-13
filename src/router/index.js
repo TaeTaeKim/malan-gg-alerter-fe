@@ -5,6 +5,7 @@ import AuthCallBack from "@/views/AuthCallBack.vue";
 import { useAuthStore } from '@/store/auth'
 
 const router = createRouter({
+    history: createWebHistory(import.meta.env.PROD ? '/malan-alerter/' : '/'),
     routes: [
         {
             path: '/',
