@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
   
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    next('/login')
+    next(import.meta.env.PROD ? '/malan-alerter/' : '/'+'login')
   } else {
     next()
   }
