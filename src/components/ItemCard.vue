@@ -12,17 +12,34 @@
           </a>
         </div>
         <div class="item-card-price">
-          <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03">
-          <template v-if="isEditing">
-            <input
-                type="number"
-                v-model.number="editedOptions.price"
-                style="width: 80px;"
-            /> 메소
-          </template>
-          <template v-else>
-            {{ item.option.price?.toLocaleString() || 0 }} 메소
-          </template>
+          <div class="item-card-price-range">
+            <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03 mt-03">
+            <template v-if="isEditing">
+              <input
+                  type="number"
+                  v-model.number="editedOptions.lowPrice"
+                  style="width: 80px;"
+              /> 메소
+            </template>
+            <template v-else>
+              {{ item.option.lowPrice?.toLocaleString() || 0 }} 메소
+            </template>
+            <div class="ml-03" style="font-size: 19px">~</div>
+          </div>
+          <div class="item-card-price-range">
+            <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03 mt-03">
+            <template v-if="isEditing">
+              <input
+                  type="number"
+                  v-model.number="editedOptions.highPrice"
+                  style="width: 80px;"
+              /> 메소
+            </template>
+            <template v-else>
+              <!--            todo: lowPrice 보여주기-->
+              {{ item.option.highPrice?.toLocaleString() || 0 }} 메소
+            </template>
+          </div>
         </div>
       </div>
       <button class="item-btn delete-btn" @click="$emit('delete')">×</button>
@@ -53,7 +70,7 @@
       <template v-if="!isEditing">
         <button class="item-btn edit-btn" @click="startEdit">편집하기</button>
         <button class="item-btn alarm-btn" :class="{ active: item.alarmOn }" @click="$emit('toggleAlarm')">
-          <img :src="item.alarmOn ? onIcon : offIcon" alt="alarm toggle" class="alarm-img" />
+          <img :src="item.alarmOn ? onIcon : offIcon" alt="alarm toggle" class="alarm-img"/>
         </button>
       </template>
       <template v-else>
@@ -61,7 +78,8 @@
             v-if="isEditing"
             class="item-btn complete-edit-btn"
             @click="completeEdit"
-        >저장 후 닫기</button>
+        >저장 후 닫기
+        </button>
         <button @click="cancelEdit" class="item-btn cancel-edit-btn">취소</button>
       </template>
     </div>
@@ -80,26 +98,29 @@ const emit = defineEmits(["update"]);
 const isEditing = ref(false);
 const editedOptions = reactive({})
 const otherOptions = itemOptions
-    .filter(opt => opt.key !== 'price')
+    .filter(opt => opt.key !== 'highPrice' && opt.key !== 'lowPrice')
     .map(opt => ({
       ...opt,
       label: opt.label.length > 2 ? opt.label.substring(0, 2) : opt.label
     }))
 
-function startEdit(){
+function startEdit() {
   isEditing.value = true;
   otherOptions.forEach(opt => {
     editedOptions[opt.key] = props.item.option[opt.key]
   });
 
-  editedOptions.price = props.item.option.price;
+  editedOptions.highPrice = props.item.option.highPrice;
+  editedOptions.lowPrice = props.item.option.lowPrice;
 
 }
-function completeEdit(){
+
+function completeEdit() {
   isEditing.value = false;
   emit('update', {...editedOptions})
 }
-function cancelEdit(){
+
+function cancelEdit() {
   isEditing.value = false;
 }
 </script>
@@ -113,7 +134,7 @@ function cancelEdit(){
   --tw-bg-opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.2s;
-  height: 270px;
+  height: 285px;
   width: 100%;
   min-width: 200px;
   box-sizing: border-box;
@@ -123,8 +144,9 @@ function cancelEdit(){
 .item-card-info {
   display: flex;
   justify-content: space-between;
-  height: 50px;
-  padding-bottom: 20px;
+  align-items: center;
+  height: 70px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #484B56;
 }
 
@@ -135,7 +157,7 @@ function cancelEdit(){
 }
 
 .malan-gg-logo {
-  height: 20px;
+  height: 16px;
   padding-left: 4px;
 }
 
@@ -157,16 +179,18 @@ function cancelEdit(){
   height: 20px;
 }
 
-.item-card-price {
+.item-card-price-range {
   display: flex;
   justify-content: start;
   align-items: center;
   font-size: 14px;
 }
-.item-btn{
+
+.item-btn {
   background: none;
 }
-.delete-btn{
+
+.delete-btn {
   font-size: 23px;
   border: none;
   color: #8C8FA3;
@@ -205,15 +229,17 @@ function cancelEdit(){
   font-weight: bold;
 }
 
-.edit-alarm-btn{
+.edit-alarm-btn {
   display: flex;
   justify-content: center;
   gap: 10px;
 }
-.alarm-btn,.edit-btn, .complete-edit-btn, .cancel-edit-btn{
+
+.alarm-btn, .edit-btn, .complete-edit-btn, .cancel-edit-btn {
   height: 42px;
   border: 1px solid #515972;
 }
+
 /* Toggle Switch */
 .alarm-btn {
   background: #343A4B;
@@ -224,36 +250,43 @@ function cancelEdit(){
 .alarm-btn.active {
   background: #FF6239;
 }
-.alarm-img{
+
+.alarm-img {
   height: 20px;
 
 }
+
 .options-container {
   height: 50%;
 }
 
-.edit-btn{
+.edit-btn {
   width: 78%;
   background: #343741;
   color: white;
 }
-.edit-btn:hover{
+
+.edit-btn:hover {
   background: #515972;
 }
-.complete-edit-btn{
+
+.complete-edit-btn {
   width: 78%;
   color: white;
   background: #343741;
 }
-.complete-edit-btn:hover{
+
+.complete-edit-btn:hover {
   background: #515972;
 }
-.cancel-edit-btn{
+
+.cancel-edit-btn {
   width: 22%;
   color: white;
   background: #343741;
 }
-.cancel-edit-btn:hover{
+
+.cancel-edit-btn:hover {
   background: #b91c1c;
 }
 </style>

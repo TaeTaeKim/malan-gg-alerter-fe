@@ -30,6 +30,9 @@ a:hover {
 .mr-03{
   margin-right: .3rem;
 }
+.ml-03{
+  margin-left: .3rem;
+}
 
 .height100{
   height: 100%;

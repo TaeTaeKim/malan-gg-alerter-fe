@@ -1,16 +1,28 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <div class="option-item preview-price-row">
-      <label for="price">가격</label>
-      <input
-          id="price"
-          type="text"
-          v-model="formattedPrice"
-          placeholder="원하는 가격을 설정해주세요"
-          @input="handlePriceInput"
-          class="option-input preview-price-input"
-      />
-    </div>
+
+      <div class="option-item preview-price-row">
+        <label for="lowPrice">가격 범위 설정</label>
+        <div class="price-range">
+          <input
+              id="lowPrice"
+              type="text"
+              v-model="formattedLowPrice"
+              placeholder="최소 가격을 설정해주세요"
+              @input="(e) => handlePriceInput('low',e)"
+              class="option-input preview-price-input"
+          />
+          <span>~</span>
+          <input
+              id="highPrice"
+              type="text"
+              v-model="formattedHighPrice"
+              placeholder="최대 가격을 설정해주세요"
+              @input="(e) => handlePriceInput('high',e)"
+              class="option-input preview-price-input"
+          />
+        </div>
+      </div>
     <div class="option-grid option-grid-4">
       <div v-for="option in firstRowOptions" :key="option.key" class="option-item">
         <label :for="option.key">{{ option.label }}</label>
@@ -44,22 +56,24 @@
 import { reactive, ref } from 'vue'
 import { itemOptions } from '@/constants/itemOptions'
 
-const firstRowOptions = itemOptions.slice(1, 5) // 힘, 민첩, 인트, 럭
-const secondRowOptions = itemOptions.slice(5) // 공격력, 마력, 합마, 명중률, 이동속도
+const firstRowOptions = itemOptions.slice(2, 6) // 힘, 민첩, 인트, 럭
+const secondRowOptions = itemOptions.slice(6) // 공격력, 마력, 합마, 명중률, 이동속도
 const optionValues = reactive({
-  price: null
+  lowPrice: null,
+  highPrice: null
 })
 firstRowOptions.concat(secondRowOptions).forEach(opt => optionValues[opt.key] = null)
 
-const formattedPrice = ref('')
+const formattedLowPrice = ref('')
+const formattedHighPrice = ref('')
 
-function handlePriceInput(e) {
-  // Remove non-digits
+function handlePriceInput(type, e) {
   const numericValue = e.target.value.replace(/[^0-9]/g, '')
-  // Convert to number
-  optionValues.price = parseInt(numericValue) || null
-  // Format with commas
-  formattedPrice.value = numericValue ? Number(numericValue).toLocaleString() : ''
+  optionValues[`${type}Price`] = parseInt(numericValue) || null
+
+  // Update corresponding formatted ref
+  const formattedRef = type === 'low' ? formattedLowPrice : formattedHighPrice
+  formattedRef.value = numericValue ? Number(numericValue).toLocaleString() : ''
 }
 
 const emit = defineEmits(['submit'])
@@ -70,8 +84,19 @@ function onSubmit() {
 </script>
 
 <style scoped>
+.price-range{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+}
+.price-range>span{
+  font-size: 25px;
+}
 .preview-price-row{
   margin-bottom: 3px;
+  width: 98%;
 }
 .preview-price-input{
   font-size: 15px;
