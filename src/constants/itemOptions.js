@@ -1,5 +1,6 @@
 export const itemOptions = [
-    { key: 'price', label: '가격' },
+    { key: 'highPrice', label: '최고가격' },
+    { key: 'lowPrice', label: '최저가격' },
     { key: 'str', label: '힘' },
     { key: 'dex', label: '민첩' },
     { key: 'int', label: '인트' },
