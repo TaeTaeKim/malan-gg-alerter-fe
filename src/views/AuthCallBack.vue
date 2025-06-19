@@ -3,9 +3,9 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/store/auth'
+import {onMounted} from 'vue'
+import {useRouter} from 'vue-router'
+import {useAuthStore} from '@/store/auth'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -15,7 +15,7 @@ onMounted(() => {
   const accessToken = params.get('accessToken')
   const refreshToken = params.get('refreshToken')
 
-  if (accessToken && refreshToken) {
+  if (accessToken) {
     authStore.setTokens(accessToken, refreshToken)
     router.push('/')
   } else {
