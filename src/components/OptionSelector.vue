@@ -79,6 +79,10 @@ function handlePriceInput(type, e) {
 const emit = defineEmits(['submit'])
 
 function onSubmit() {
+  if (optionValues.lowPrice && optionValues.highPrice && optionValues.lowPrice > optionValues.highPrice) {
+    alert('최소 가격이 최대 가격보다 클 수 없습니다.')
+    return
+  }
   emit('submit', { ...optionValues })
 }
 </script>
