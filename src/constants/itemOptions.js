@@ -10,4 +10,5 @@ export const itemOptions = [
     { key: 'hapma', label: '합마'},
     { key: 'accuracy', label: '명중률' },
     { key: 'speed', label: '이동속도' },
+    { key: 'jump', label: '점프력'}
 ]
