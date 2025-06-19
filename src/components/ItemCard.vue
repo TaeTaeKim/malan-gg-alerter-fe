@@ -36,13 +36,12 @@
               /> 메소
             </template>
             <template v-else>
-              <!--            todo: lowPrice 보여주기-->
               {{ item.option.highPrice?.toLocaleString() || 0 }} 메소
             </template>
           </div>
         </div>
       </div>
-      <button class="item-btn delete-btn" @click="$emit('delete')">×</button>
+      <button class="item-btn delete-btn" @click="confirmDelete">×</button>
     </div>
     <div class="options-container">
       <!-- Other options grid -->
@@ -84,6 +83,17 @@
       </template>
     </div>
   </div>
+
+  <!-- Add confirmation modal -->
+  <div v-if="showConfirmModal" class="confirm-modal">
+    <div class="confirm-modal-content">
+      <p>정말 삭제하시겠습니까?</p>
+      <div class="confirm-buttons">
+        <button @click="handleDelete" class="confirm-yes">확인</button>
+        <button @click="showConfirmModal = false" class="confirm-no">취소</button>
+      </div>
+    </div>
+  </div>
 </template>
 <script setup>
 import {itemOptions} from '@/constants/itemOptions'
@@ -122,6 +132,17 @@ function completeEdit() {
 
 function cancelEdit() {
   isEditing.value = false;
+}
+
+const showConfirmModal = ref(false);
+
+function confirmDelete() {
+  showConfirmModal.value = true
+}
+
+function handleDelete() {
+  showConfirmModal.value = false
+  emit('delete')
 }
 </script>
 
@@ -288,5 +309,49 @@ function cancelEdit() {
 
 .cancel-edit-btn:hover {
   background: #b91c1c;
+}
+
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirm-modal-content {
+  background: #343741;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.confirm-yes, .confirm-no {
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.confirm-yes {
+  background: #FF6239;
+  color: white;
+}
+
+.confirm-no {
+  background: #515972;
+  color: white;
 }
 </style>
