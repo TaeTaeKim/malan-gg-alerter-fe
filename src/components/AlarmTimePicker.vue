@@ -81,8 +81,9 @@ watch([startTime, endTime], emitUpdate)
 
 .time-picker input[type="time"] {
   padding: 4px;
+  height: 30px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 16px;
   border: 1px solid #484B56;
   background: #343741;
 }
