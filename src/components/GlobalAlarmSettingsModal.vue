@@ -1,8 +1,8 @@
 <script setup>
-import MultiRangeSlider from "@/components/MultiRangeSlider.vue";
 import VueToggles from "vue-toggles"
 import {useUserStore} from "@/store/user.js";
 import {onMounted, computed} from "vue";
+import AlarmTimePicker from "@/components/AlarmTimePicker.vue";
 
 const userStore = useUserStore();
 const props = defineProps({
@@ -58,7 +58,7 @@ function updateTime(updateTime) {
       <div class="global-desc">
         알람 받고 싶은 시간을 설정할 수 있어요.
       </div>
-      <MultiRangeSlider
+      <AlarmTimePicker
           :user="userStore.currentUser"
           @update="updateTime"
       />
