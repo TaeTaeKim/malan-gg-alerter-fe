@@ -5,7 +5,7 @@ on:
       - main
 env:
   MAJOR_VERSION: 1
-  MINOR_VERSION: 1
+  MINOR_VERSION: 2
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest

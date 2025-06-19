@@ -131,7 +131,7 @@ function onSubmit() {
 .option-grid-5 {
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
 }
 
 .button-group {
