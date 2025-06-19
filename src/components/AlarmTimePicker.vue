@@ -52,11 +52,11 @@ watch([startTime, endTime], emitUpdate)
 <template>
   <div class="time-picker mt-03">
     <label>
-      알람 체크 시작
+      알람 시작
       <input type="time" v-model="startTime" step="900" />
     </label>
     <label>
-      알람 체크 종료
+      알람 종료
       <input type="time" v-model="endTime" step="900" />
     </label>
   </div>
