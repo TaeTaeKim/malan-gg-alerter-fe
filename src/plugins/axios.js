@@ -46,7 +46,7 @@ function isAccessTokenExpired(error){
     return (
         error.response &&
         error.response.status === 401 &&
-        error.response.data.code === "AUTH_002" || error.response.data.code === "AUTH_005" // 액세스 토큰 만료나 로그아웃된 토큰일때
+        error.response.data.code === "AUTH_002" // 액세스 토큰 만료나 로그아웃된 토큰일때
     )
 }
 
@@ -55,6 +55,6 @@ function isInvalidRefreshToken(error){
     return (
         error.response &&
         error.response.status === 401 &&
-        (error.response.data.code === "AUTH_003" || error.response.data.code === "AUTH_004") // when refresh token expired OR not found(revoked)
+        error.response.data.code === "AUTH_003" // when refresh token expired OR not found(revoked)
     )
 }
