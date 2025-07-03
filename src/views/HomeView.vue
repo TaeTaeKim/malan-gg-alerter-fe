@@ -37,7 +37,6 @@
 <script setup>
 import {onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router'
-import {useMainStore} from '@/store/index'
 import {useAuthStore} from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
@@ -46,15 +45,12 @@ import GlobalAlarmSettingsModal from "@/components/GlobalAlarmSettingsModal.vue"
 import SupportModal from "@/components/SupportModal.vue";
 
 const router = useRouter()
-const store = useMainStore()
 const auth = useAuthStore()
 
 onMounted(async () => {
   if (!auth.isAuthenticated) {
     router.push('/login')
-    return
   }
-  await store.fetchRegisteredItems()
 })
 const handleLogout = async () => {
   await auth.logout()

@@ -55,7 +55,7 @@
               <input
                   type="number"
                   v-model.number="editedOptions[opt.key]"
-                  style="width: 50px;"
+                  style="width: min(50px, 3vw);"
               />
             </template>
             <template v-else>
@@ -81,6 +81,11 @@
         </button>
         <button @click="cancelEdit" class="item-btn cancel-edit-btn">취소</button>
       </template>
+    </div>
+    <div class="item-bid">
+      <h4>코멘트목록</h4>
+
+
     </div>
   </div>
 
@@ -155,7 +160,7 @@ function handleDelete() {
   --tw-bg-opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.2s;
-  height: 285px;
+  height: 330px;
   width: 100%;
   min-width: 200px;
   box-sizing: border-box;
@@ -229,7 +234,7 @@ function handleDelete() {
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 60%;
   gap: 3px;
 }
 
@@ -275,10 +280,6 @@ function handleDelete() {
 .alarm-img {
   height: 20px;
 
-}
-
-.options-container {
-  height: 50%;
 }
 
 .edit-btn {
