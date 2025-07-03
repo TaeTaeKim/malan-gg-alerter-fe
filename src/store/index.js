@@ -73,20 +73,17 @@ export const useMainStore = defineStore('main', {
         async fetchRegisteredItems() {
             await axios.get(`${__API_PREFIX__}/api/alerter`)
                 .then(res => {
-                    res.data.forEach(resItem => {
-                        this.registeredItems.push({
-                            id: resItem.id,
-                            itemId: resItem.itemId,
-                            koreanName: resItem.itemName,
-                            imageUrl: this.getItemIconUrl(resItem.itemId),
-                            option: Object.fromEntries(
-                                itemOptions.map(opt => [opt.key, resItem.itemOptions?.[opt.key]])
-                            ),
-                            alarmOn: resItem.isAlarm
-                        })
-
-                    })
-                })
+                    this.registeredItems = res.data.map(resItem =>({
+                        id: resItem.id,
+                        itemId: resItem.itemId,
+                        koreanName: resItem.itemName,
+                        imageUrl: this.getItemIconUrl(resItem.itemId),
+                        option: Object.fromEntries(
+                            itemOptions.map(opt => [opt.key, resItem.itemOptions?.[opt.key]])
+                        ),
+                        alarmOn: resItem.isAlarm
+                    }))
+                });
         },
 
         clearRegisteredItems() {
@@ -96,12 +93,16 @@ export const useMainStore = defineStore('main', {
         /** 4) 등록 (Spring Boot 서버 post) */
         async registerItem(itemId, option) {
             // 서버 스펙: POST /alerter?itemId=<id>  body: ItemCondition JSON
-            await axios.post(
-                `${__API_PREFIX__}/api/alerter?itemId=${itemId}`,
-                option
-            )
-            // 등록후 registeredItems 갱신
-            fetchRegisteredItems() // 서버에서 다시 가져오기
+            try {
+                await axios.post(
+                    `${__API_PREFIX__}/api/alerter?itemId=${itemId}`,
+                    option
+                );
+                // After successful registration, fetch the updated list
+                await this.fetchRegisteredItems();
+            } catch (error) {
+                console.error("Error registering item:", error);
+            }
         },
 
         /** 5) 수정 (PATCH) */
