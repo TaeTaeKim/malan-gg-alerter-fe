@@ -1,4 +1,10 @@
 <template>
+  <transition name="fade">
+    <div v-if="showAlarmNotice" class="alarm-notice-window" style="background-color:#b91c1c; color:white;">
+      알람 비활성화 :  {{ alarmNoticeMessage }}
+      <button class="alarm-noti-disable" @click="alarmNoticeClosed=true">×</button>
+    </div>
+  </transition>
   <div class="container">
     <header class="app-header">
       <div class="logo-title">
@@ -35,7 +41,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {useRouter} from 'vue-router'
 import {useAuthStore} from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
@@ -43,13 +49,17 @@ import RegisteredItemList from '@/components/RegisteredItemList.vue'
 import SearchBar from "@/components/SearchBar.vue";
 import GlobalAlarmSettingsModal from "@/components/GlobalAlarmSettingsModal.vue";
 import SupportModal from "@/components/SupportModal.vue";
+import { useUserStore } from '@/store/user'
 
 const router = useRouter()
+const userStore = useUserStore()
 const auth = useAuthStore()
 
 onMounted(async () => {
   if (!auth.isAuthenticated) {
     router.push('/login')
+  }else{
+    userStore.getCurrentUserInfo();
   }
 })
 const handleLogout = async () => {
@@ -67,6 +77,26 @@ const toggleAlarmSetting = () => {
 const toggleSupport= () =>{
   isSupportOpen.value = !isSupportOpen.value;
 }
+// 알람 꺼짐 경고 모달
+const isUserLoaded = computed(() => !!userStore.currentUser)
+const isAlarmEnabled = computed(() => userStore.currentUser?.isAlarm?? false )
+const isAlarmTime = computed(() => userStore.currentUser?.isAlarmTime?? false)
+const alarmNoticeClosed = ref(false)
+
+const showAlarmNotice = computed(() => {
+  if (alarmNoticeClosed.value) return false
+  if (!isUserLoaded.value) return false
+  if (!isAlarmEnabled.value) return true
+  if (!isAlarmTime.value) return true
+  return false
+})
+
+const alarmNoticeMessage = computed(() => {
+  if (!isAlarmEnabled.value) return "알람이 꺼져있습니다"
+  if (!isAlarmTime.value) return "알람시간이 아닙니다"
+  return ""
+})
+
 </script>
 
 <style scoped>
@@ -187,7 +217,34 @@ header {
 
 .search-section{
   height: 400px;
+}
 
+/* 알람 꺼짐 경고 모달 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.7s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-to, .fade-leave-from {
+  opacity: 1;
+}
+
+.alarm-notice-window {
+  position: fixed;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 18px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 2000;
+  font-size: 1.2em;
+}
+.alarm-noti-disable{
+  font-size: 25px;
+  border: none;
+  background: none;
 }
 
 </style>
