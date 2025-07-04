@@ -2,6 +2,7 @@
 import {defineStore} from 'pinia'
 import {itemOptions} from '@/constants/itemOptions'
 import axios from 'axios'
+import {reactive} from "vue";
 
 export const useMainStore = defineStore('main', {
     state: () => ({
@@ -12,7 +13,7 @@ export const useMainStore = defineStore('main', {
         // 전체 아이템 목록 (검색용)
         allItems: [],    // [{ id: string, nameKorean: string }]
         imageCache: new Map(),
-        itemBids: new Map(),
+        itemBids: reactive(new Map()),
         bidIntervalId: null
     }),
 
@@ -112,6 +113,7 @@ export const useMainStore = defineStore('main', {
                 newOption,
                 {params: {alertId}}
             )
+            await this.getAllItemBids()
             const it = this.registeredItems.find(i => i.id === alertId)
             if (it) it.option = newOption
         },
@@ -146,13 +148,17 @@ export const useMainStore = defineStore('main', {
         async getAllItemBids() {
             await axios.get(`${__API_PREFIX__}/api/alerter/bid`)
                 .then(res => {
-                        this.itemBids.clear()
                         Object.entries(res.data).forEach(([alertId, bids]) => {
-                            this.itemBids.set(alertId, bids)
+                            const alertIdNum = parseInt(alertId, 10)
+                            this.itemBids.set(alertIdNum, bids)
                         })
 
                     }
                 )
+        },
+        async turnOffBid(itemId, bidId) {
+            await axios.delete(`${__API_PREFIX__}/api/alerter/bid/${bidId}`);
+            await this.getAllItemBids()
         }
     }
 })
