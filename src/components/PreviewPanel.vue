@@ -35,10 +35,9 @@ const store = useMainStore()
 const imageUrl = computed(() => store.currentItem?.iconUrl)
 
 
-function addItem(optionData) {
-  store.registerItem(store.currentItem.id, optionData)
+async function addItem(optionData) {
+  await store.registerItem(store.currentItem.id, optionData)
   clearCurrentItem()
-  window.location.reload()
 }
 
 function clearCurrentItem() {

@@ -6,12 +6,19 @@ import router from '@/router'
 axios.interceptors.response.use(
     (response) => response,
     async (error) => {
+        const auth = useAuthStore()
         const originalRequest = error.config
+        if(isTokenError(error)) {
+            auth.accessToken=null
+            auth.refreshToken=null
+            router.push('/login')
+
+        }
 
         // refresh token 으로 access token 갱신
         if (isAccessTokenExpired(error) && !originalRequest._retry) {
             originalRequest._retry = true
-            const auth = useAuthStore()
+
 
             try {
                 await auth.renewToken() // refresh 와 브라우저 localStorage 갱신
@@ -59,5 +66,13 @@ function isInvalidRefreshToken(error) {
         error.response &&
         error.response.status === 401 &&
         error.response.data.code === "AUTH_003" // when refresh token expired OR not found(revoked)
+    );
+
+}
+function isTokenError(error) {
+    return (
+        error.response &&
+        error.response.status === 401 &&
+        error.response.data.code === "AUTH_001"
     )
 }

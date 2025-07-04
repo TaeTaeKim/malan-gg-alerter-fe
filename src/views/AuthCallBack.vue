@@ -17,7 +17,7 @@ onMounted(() => {
 
   if (accessToken) {
     authStore.setTokens(accessToken, refreshToken)
-    router.push('/')
+    router.replace('/')
   } else {
     router.replace('/login') // fallback
   }

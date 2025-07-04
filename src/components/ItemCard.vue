@@ -55,7 +55,7 @@
               <input
                   type="number"
                   v-model.number="editedOptions[opt.key]"
-                  style="width: 50px;"
+                  style="width: min(50px, 3vw);"
               />
             </template>
             <template v-else>
@@ -82,6 +82,24 @@
         <button @click="cancelEdit" class="item-btn cancel-edit-btn">취소</button>
       </template>
     </div>
+    <div class="item-bid">
+      <h5 class="bid-title">코멘트목록</h5>
+      <!--  alert Id에 맞는 코멘트 리스트 출력-->
+      <ul v-if="bids && bids.length > 0" class="bid-list">
+        <li v-for="(bid, index) in bids" :key="bid.id" class="bid-item-container" style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center;">
+            <img src="/static/meso.png" alt="meso" width="12" height="15" style="margin-right: 1px;" class="inline-block mt-03">
+            <div class="bid-item">
+              {{ formatPrice(bid.price) }} | {{ bid.comment.length > 15 ? bid.comment.slice(0, 15) + '...' : bid.comment }}
+            </div>
+          </div>
+          <button class="bid-delete-btn" @click="turnOffBid(item.id, bid.id)">×</button>
+        </li>
+      </ul>
+      <p v-else>코멘트가 없습니다.</p>
+
+
+    </div>
   </div>
 
   <!-- Add confirmation modal -->
@@ -97,14 +115,16 @@
 </template>
 <script setup>
 import {itemOptions} from '@/constants/itemOptions'
-import {reactive, ref} from "vue";
+import {computed, reactive, ref} from "vue";
 import onIcon from '@/assets/alarm-on.png'
 import offIcon from '@/assets/alarm-off.png'
+import {useMainStore} from '@/store/index.js'
+
 
 const props = defineProps({
   item: Object
 })
-const emit = defineEmits(["update"]);
+const emit = defineEmits(["update", "delete", "toggleAlarm"]);
 const isEditing = ref(false);
 const editedOptions = reactive({})
 const otherOptions = itemOptions
@@ -144,6 +164,31 @@ function handleDelete() {
   showConfirmModal.value = false
   emit('delete')
 }
+
+// bid list
+const store = useMainStore();
+const bids = computed(() => {
+  const itemId = props.item.id;
+  const bidsFromStore = store.itemBids.get(itemId);
+  return bidsFromStore || [];
+});
+
+function formatPrice(price) {
+  if (price >= 100000000) {
+    // 1억 이상: 억 단위, 소수점 2자리
+    return (price / 100000000).toFixed(2).replace(/\.00$/, '') + ' 억 메소';
+  } else if (price >= 100000) {
+    // 10만 이상: 만 단위, 소수점 2자리
+    return (price / 10000).toFixed(2).replace(/\.00$/, '') + ' 만 메소';
+  } else {
+    // 그 외: 그냥 숫자
+    return price.toLocaleString() + ' 메소';
+  }
+}
+
+function turnOffBid(alertId, bidId){
+  store.turnOffBid(alertId, bidId)
+}
 </script>
 
 <style scoped>
@@ -155,7 +200,7 @@ function handleDelete() {
   --tw-bg-opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.2s;
-  height: 285px;
+  height: 370px;
   width: 100%;
   min-width: 200px;
   box-sizing: border-box;
@@ -229,7 +274,7 @@ function handleDelete() {
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 60%;
   gap: 3px;
 }
 
@@ -260,6 +305,21 @@ function handleDelete() {
   height: 42px;
   border: 1px solid #515972;
 }
+/* comment css */
+.bid-title{
+  margin: 10px 0 10px 0;
+}
+.bid-list{
+  margin: 0;
+  padding: 0;
+}
+.bid-item{
+  font-size: small;
+}
+.bid-delete-btn{
+  background: #343741;
+  border: none;
+}
 
 /* Toggle Switch */
 .alarm-btn {
@@ -275,10 +335,6 @@ function handleDelete() {
 .alarm-img {
   height: 20px;
 
-}
-
-.options-container {
-  height: 50%;
 }
 
 .edit-btn {
