@@ -86,7 +86,7 @@
       <h5 class="bid-title">코멘트목록</h5>
       <!--  alert Id에 맞는 코멘트 리스트 출력-->
       <ul v-if="bids && bids.length > 0" class="bid-list">
-        <li v-for="(bid, index) in bids" :key="index" class="bid-item-container" style="display: flex; align-items: center; justify-content: space-between;">
+        <li v-for="(bid, index) in bids" :key="bid.id" class="bid-item-container" style="display: flex; align-items: center; justify-content: space-between;">
           <div style="display: flex; align-items: center;">
             <img src="/static/meso.png" alt="meso" width="12" height="15" style="margin-right: 1px;" class="inline-block mt-03">
             <div class="bid-item">
