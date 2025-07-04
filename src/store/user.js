@@ -12,7 +12,8 @@ export const useUserStore = defineStore('userStore', {
             this.currentUser = {
                 isAlarm: res.data.isAlarm,
                 minAlarmTime: res.data.minTime,
-                maxAlarmTime: res.data.maxTime
+                maxAlarmTime: res.data.maxTime,
+                isAlarmTime: res.data.isAlarmTime
             }
         },
 
@@ -27,6 +28,8 @@ export const useUserStore = defineStore('userStore', {
                 minTime: minTime,
                 maxTime: maxTime
             })
+            // Fetch updated user info after patch
+            await this.getCurrentUserInfo()
             if (this.currentUser) {
                 this.currentUser.minAlarmTime = minTime
                 this.currentUser.maxAlarmTime = maxTime

@@ -8,9 +8,6 @@ const userStore = useUserStore();
 const props = defineProps({
   isOpen: Boolean,
 })
-onMounted(() =>{
-  userStore.getCurrentUserInfo();
-})
 const isAlarmEnabled = computed(() => {
   return userStore.currentUser?.isAlarm ?? false
 })
