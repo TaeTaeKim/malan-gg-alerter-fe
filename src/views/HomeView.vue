@@ -38,6 +38,21 @@
       </div>
     </div>
   </div>
+  <footer class="app-footer">
+  <div>
+    <a
+      href="https://open.kakao.com/o/s4fVKDFh"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="openchat-link"
+    >
+      💬 카카오톡 문의
+    </a>
+  </div>
+  <div class="copyright">
+    &copy; 2025 메랜지지 알리미. All rights reserved.
+  </div>
+</footer>
 </template>
 
 <script setup>
@@ -245,6 +260,33 @@ header {
   font-size: 25px;
   border: none;
   background: none;
+}
+/* footer */
+.app-footer {
+  margin-top: 40px;
+  padding: 20px 0 10px 0;
+  text-align: center;
+  color: #888;
+  font-size: 15px;
+  background: none;
+}
+
+.openchat-link {
+  color: #888;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: bolder;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+
+.openchat-link:hover {
+  text-decoration: underline;
+}
+
+.copyright {
+  margin-top: 6px;
+  font-size: 13px;
 }
 
 </style>

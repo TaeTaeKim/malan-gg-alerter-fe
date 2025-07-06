@@ -31,6 +31,9 @@ onBeforeUnmount(() => {
 
 <style>
 /* 글로벌 스타일 정의 */
+html, body {
+  overflow-x: hidden;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
