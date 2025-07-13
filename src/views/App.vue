@@ -19,6 +19,8 @@ watch(
       if (isAuthenticated) {
         store.fetchRegisteredItems()
         store.startBidPolling()
+      }else{
+        store.stopBidPolling()
       }
     },
     { immediate: true }
