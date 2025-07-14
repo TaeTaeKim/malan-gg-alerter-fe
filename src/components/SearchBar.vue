@@ -187,4 +187,53 @@ function getItemIcon(itemId) {
   height: 32px;
   object-fit: contain;
 }
+
+@media (max-width: 780px) {
+  .search-container {
+    justify-content: start;
+    width: 100%;
+  }
+
+  .search-bar,
+  .dropdown {
+    width: 98vw;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .search-bar {
+    height: 44px;
+    gap: 4px;
+  }
+
+  .search-input-wrapper {
+    padding: 2px 6px;
+    border-radius: 7px;
+  }
+
+  .search-icon {
+    width: 20px;
+    height: 20px;
+    margin: 0 8px 0 8px;
+  }
+
+  .search-input {
+    font-size: 15px;
+  }
+
+  .search-btn {
+    font-size: 14px;
+    padding: 2px 6px;
+  }
+
+  .candidate-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .dropdown-item {
+    padding: 6px 8px;
+    gap: 5px;
+  }
+}
 </style>

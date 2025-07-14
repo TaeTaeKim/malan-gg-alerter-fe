@@ -121,9 +121,6 @@ function goToTimer() {
 }
 
 .main-content {
-  display: grid;
-  align-content: start;
-  gap: 40px;
   max-width: 100%;
   /* Ensure content doesn't overflow */
   min-height: calc(100vh - 60px - 40px);
@@ -235,6 +232,7 @@ header {
 
 .search-section {
   height: 400px;
+  margin-bottom: 40px;
 }
 
 /* 알람 꺼짐 경고 모달 */
@@ -301,8 +299,9 @@ header {
 
 @media (max-width: 760px) {
   .container {
-    width: 96%;
-    padding: 0 3% 0 3%;
+    width: 92%;
+    padding: 0 4% 0 4%;
+    margin: 0;
   }
 
   .app-header {
