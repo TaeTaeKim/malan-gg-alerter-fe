@@ -3,37 +3,24 @@
     <div class="search-bar">
       <div class="search-input-wrapper">
         <img src="@/assets/search-icon.png" alt="search icon" class="search-icon">
-        <input
-            type="text"
-            :value=query
-            @input="onInput"
-            @compositionStart="onCompositionStart"
-            @compositionEnd="onCompositionEnd"
-            @keyup.enter="onSearch"
-            @keydown="onKeyDown"
-            placeholder="알람 등록하고 싶은 아이템을 검색하세요"
-            class="search-input"
-        />
+        <input type="text" :value=query @input="onInput" @compositionStart="onCompositionStart"
+          @compositionEnd="onCompositionEnd" @keyup.enter="onSearch" @keydown="onKeyDown"
+          placeholder="알람 등록하고 싶은 아이템을 검색하세요" class="search-input" />
         <button @click="onSearch" class="search-btn">검색</button>
       </div>
     </div>
     <div class="dropdown" v-show="candidates.length">
-      <div
-          v-for="(item, index) in candidates"
-          :key="item.id"
-          @click="onClick(item)"
-          class="dropdown-item"
-          :class="{'selected' : index === selectedIndex }"
-      >
+      <div v-for="(item, index) in candidates" :key="item.id" @click="onClick(item)" class="dropdown-item"
+        :class="{ 'selected': index === selectedIndex }">
         <img :src="getItemIcon(item.id)" alt="item icon" class="candidate-icon">
-        {{item.nameKorean}}
+        {{ item.nameKorean }}
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import {ref} from 'vue'
-import {useMainStore} from '@/store'
+import { ref } from 'vue'
+import { useMainStore } from '@/store'
 
 const query = ref('')
 const isComposing = ref(false)
@@ -42,10 +29,10 @@ const candidates = ref([])
 const selectedIndex = ref(-1)
 
 // dropdown keyboard navigation
-function onKeyDown(e){
-  if(!candidates.value.length)return
+function onKeyDown(e) {
+  if (!candidates.value.length) return
 
-  switch (e.key){
+  switch (e.key) {
     case 'ArrowDown':
       e.preventDefault()
       selectedIndex.value = (selectedIndex.value + 1) % candidates.value.length
@@ -53,8 +40,8 @@ function onKeyDown(e){
     case 'ArrowUp':
       e.preventDefault()
       selectedIndex.value = selectedIndex.value <= 0
-          ? candidates.value.length - 1
-          : selectedIndex.value - 1
+        ? candidates.value.length - 1
+        : selectedIndex.value - 1
       break
     case 'Enter':
       if (selectedIndex.value >= 0) {
@@ -66,7 +53,7 @@ function onKeyDown(e){
 }
 
 // 유저 한글 입력시에 글자 조합 이슈 해결을 위한 메소드들
-function onCompositionStart(){
+function onCompositionStart() {
   isComposing.value = true
 }
 
@@ -76,9 +63,9 @@ function onCompositionEnd(e) {
   candidates.value = store.searchItemCandidates(query.value)
 }
 
-function onInput(e){
+function onInput(e) {
   query.value = e.target.value
-  if(!isComposing.value){
+  if (!isComposing.value) {
     candidates.value = store.searchItemCandidates(query.value)
   }
 }
@@ -111,9 +98,10 @@ function getItemIcon(itemId) {
 }
 
 .search-bar,
-.dropdown{
+.dropdown {
   width: 630px;
 }
+
 .search-bar {
   display: flex;
   height: 64px;
@@ -129,24 +117,27 @@ function getItemIcon(itemId) {
   padding: 4px 12px;
   flex: 1;
 }
+
 .search-input-wrapper button {
   margin-left: auto;
   background: none;
   font-size: 18px;
 }
-.search-icon{
+
+.search-icon {
   width: 30px;
   height: 30px;
   margin: 0 20px 0 20px;
   flex-shrink: 0;
 }
 
-.search-btn{
+.search-btn {
   border: none;
   background: #343741;
   color: white;
 }
-.search-input{
+
+.search-input {
   background: transparent;
   border: none;
   outline: none;
@@ -155,7 +146,8 @@ function getItemIcon(itemId) {
   min-width: 0;
   font-size: 20px;
 }
-.search-input::placeholder{
+
+.search-input::placeholder {
   color: #888fa1;
 }
 
@@ -185,6 +177,7 @@ function getItemIcon(itemId) {
 .dropdown-item:hover {
   background: #374151;
 }
+
 .dropdown-item.selected {
   background: #055fec;
 }
