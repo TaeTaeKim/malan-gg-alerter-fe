@@ -14,7 +14,7 @@
       <div class="header-actions">
         <div class="support-container">
           <button class="support-btn" @click="toggleSupport">💸 후원하기</button>
-          <SupportModal :is-open="isSupportOpen" />
+          <SupportModal :is-open="isSupportOpen" @close="isSupportOpen = false" />
         </div>
         <div class="global-alarm-setting">
           <button @click="toggleAlarmSetting" class="global-alarm-btn">
