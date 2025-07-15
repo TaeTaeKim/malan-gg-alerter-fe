@@ -21,7 +21,7 @@
   </div>
   <div class="preview-panel-msg" v-else>
     <img src="/static/preview-img.png" alt="">
-    <div style="color:#888fa1; font-size: 20px">
+    <div class="preview-msg-text">
       거래하고 싶은 아이템 옵션과 가격을 등록하고<br>디스코드 알림으로 빠르게 거래해보세요!
     </div>
   </div>
@@ -76,6 +76,11 @@ function clearCurrentItem() {
   height: 70px;
 }
 
+.preview-msg-text {
+  color: #888fa1;
+  font-size: 20px;
+}
+
 /* 등록 뷰 상단 이름과 메랜지지 링크*/
 .preview-item-name {
   display: flex;
@@ -126,5 +131,76 @@ function clearCurrentItem() {
 .preview-search-placeholder :deep(.search-bar) {
   width: 80%;
   max-width: 400px;
+}
+
+@media(max-width:760px) {
+  .preview-panel {
+    height: auto !important;
+    overflow-y: visible !important;
+  }
+
+  .preview-panel-msg {
+    height: auto !important;
+    overflow-y: visible !important;
+  }
+
+  .preview-panel-msg>img {
+    height: 5vh;
+  }
+
+  .preview-msg-text {
+    font-size: .75rem;
+  }
+
+  .preview-item-info {
+    height: auto !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .preview-item-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .preview-left,
+  .preview-right {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .preview-img {
+    width: 15vw;
+    max-width: 320px;
+    height: auto;
+  }
+
+  .preview-item-name {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .preview-item-name>span {
+    font-size: 1rem;
+  }
+
+  .preview-item-name>a {
+    font-size: 0.8rem;
+  }
+
+  .preview-right {
+    margin-top: 0;
+  }
 }
 </style>

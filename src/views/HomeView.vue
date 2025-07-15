@@ -336,13 +336,17 @@ header {
   .timer-btn,
   .global-alarm-btn,
   .logout-btn {
-    height: 36px;
+    height: 30px;
     font-size: 0.7rem;
     padding: 2px 8px;
   }
 
   .global-alarm-btn>img {
     height: 18px;
+  }
+
+  .search-section {
+    height: auto;
   }
 }
 </style>
