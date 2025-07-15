@@ -348,5 +348,9 @@ header {
   .search-section {
     height: auto;
   }
+
+  .items-section>h2 {
+    font-size: 1.2rem;
+  }
 }
 </style>

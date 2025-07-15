@@ -2,11 +2,11 @@
   <div class="item-card">
     <!--    아이템 이미지, 이름, 설정가격, 알림여부를 결정하는 화면-->
     <div class="item-card-info">
-      <img :src="item.imageUrl" alt="" class="item-img"/>
+      <img :src="item.imageUrl" alt="" class="item-img" />
       <div class="item-card-name-price">
         <div class="item-card-name">
-          <a :href="`https://mapleland.gg/item/${ item.itemId }`" class="malan-gg-link" target="_blank"
-             rel="noopener noreferrer">
+          <a :href="`https://mapleland.gg/item/${item.itemId}`" class="malan-gg-link" target="_blank"
+            rel="noopener noreferrer">
             <span>{{ item.koreanName }}</span>
             <img src="https://mapleland.gg/logo.png" alt="메랜지지로고" class="malan-gg-logo">
           </a>
@@ -15,11 +15,7 @@
           <div class="item-card-price-range">
             <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03 mt-03">
             <template v-if="isEditing">
-              <input
-                  type="number"
-                  v-model.number="editedOptions.lowPrice"
-                  style="width: 80px;"
-              /> 메소
+              <input type="number" v-model.number="editedOptions.lowPrice" class="price-edit-input" /> 메소
             </template>
             <template v-else>
               {{ item.option.lowPrice?.toLocaleString() || 0 }} 메소
@@ -29,11 +25,7 @@
           <div class="item-card-price-range">
             <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03 mt-03">
             <template v-if="isEditing">
-              <input
-                  type="number"
-                  v-model.number="editedOptions.highPrice"
-                  style="width: 80px;"
-              /> 메소
+              <input type="number" v-model.number="editedOptions.highPrice" class="price-edit-input" /> 메소
             </template>
             <template v-else>
               {{ item.option.highPrice?.toLocaleString() || 0 }} 메소
@@ -52,11 +44,7 @@
           </div>
           <div class="option-value">
             <template v-if="isEditing">
-              <input
-                  type="number"
-                  v-model.number="editedOptions[opt.key]"
-                  style="width: min(50px, 3vw);"
-              />
+              <input type="number" v-model.number="editedOptions[opt.key]" class="option-edit-input" />
             </template>
             <template v-else>
               {{ item.option[opt.key] }}
@@ -69,28 +57,27 @@
       <template v-if="!isEditing">
         <button class="item-btn edit-btn" @click="startEdit">편집하기</button>
         <button class="item-btn alarm-btn" :class="{ active: item.alarmOn }" @click="$emit('toggleAlarm')">
-          <img :src="item.alarmOn ? onIcon : offIcon" alt="alarm toggle" class="alarm-img"/>
+          <img :src="item.alarmOn ? onIcon : offIcon" alt="alarm toggle" class="alarm-img" />
         </button>
       </template>
       <template v-else>
-        <button
-            v-if="isEditing"
-            class="item-btn complete-edit-btn"
-            @click="completeEdit"
-        >저장 후 닫기
+        <button v-if="isEditing" class="item-btn complete-edit-btn" @click="completeEdit">저장 후 닫기
         </button>
         <button @click="cancelEdit" class="item-btn cancel-edit-btn">취소</button>
       </template>
     </div>
     <div class="item-bid">
-      <h5 class="bid-title">코멘트목록</h5>
+      <h5 class="bid-title" style="margin: 7px;">코멘트목록</h5>
       <!--  alert Id에 맞는 코멘트 리스트 출력-->
       <ul v-if="bids && bids.length > 0" class="bid-list">
-        <li v-for="(bid, index) in bids" :key="bid.id" class="bid-item-container" style="display: flex; align-items: center; justify-content: space-between;">
+        <li v-for="(bid, index) in bids" :key="bid.id" class="bid-item-container"
+          style="display: flex; align-items: center; justify-content: space-between;">
           <div style="display: flex; align-items: center;">
-            <img src="/static/meso.png" alt="meso" width="12" height="15" style="margin-right: 1px;" class="inline-block mt-03">
+            <img src="/static/meso.png" alt="meso" width="12" height="15" style="margin-right: 1px;"
+              class="inline-block mt-03">
             <div class="bid-item">
-              {{ formatPrice(bid.price) }} | {{ bid.comment.length > 15 ? bid.comment.slice(0, 15) + '...' : bid.comment }}
+              {{ formatPrice(bid.price) }} | {{ bid.comment.length > 15 ? bid.comment.slice(0, 15) + '...' : bid.comment
+              }}
             </div>
           </div>
           <button class="bid-delete-btn" @click="turnOffBid(item.id, bid.id)">×</button>
@@ -114,11 +101,11 @@
   </div>
 </template>
 <script setup>
-import {itemOptions} from '@/constants/itemOptions'
-import {computed, reactive, ref} from "vue";
+import { itemOptions } from '@/constants/itemOptions'
+import { computed, reactive, ref } from "vue";
 import onIcon from '@/assets/alarm-on.png'
 import offIcon from '@/assets/alarm-off.png'
-import {useMainStore} from '@/store/index.js'
+import { useMainStore } from '@/store/index.js'
 
 
 const props = defineProps({
@@ -128,11 +115,11 @@ const emit = defineEmits(["update", "delete", "toggleAlarm"]);
 const isEditing = ref(false);
 const editedOptions = reactive({})
 const otherOptions = itemOptions
-    .filter(opt => opt.key !== 'highPrice' && opt.key !== 'lowPrice')
-    .map(opt => ({
-      ...opt,
-      label: opt.label.length > 2 ? opt.label.substring(0, 2) : opt.label
-    }))
+  .filter(opt => opt.key !== 'highPrice' && opt.key !== 'lowPrice')
+  .map(opt => ({
+    ...opt,
+    label: opt.label.length > 2 ? opt.label.substring(0, 2) : opt.label
+  }))
 
 function startEdit() {
   isEditing.value = true;
@@ -147,7 +134,7 @@ function startEdit() {
 
 function completeEdit() {
   isEditing.value = false;
-  emit('update', {...editedOptions})
+  emit('update', { ...editedOptions })
 }
 
 function cancelEdit() {
@@ -186,7 +173,7 @@ function formatPrice(price) {
   }
 }
 
-function turnOffBid(alertId, bidId){
+function turnOffBid(alertId, bidId) {
   store.turnOffBid(alertId, bidId)
 }
 </script>
@@ -245,6 +232,10 @@ function turnOffBid(alertId, bidId){
   height: 20px;
 }
 
+.price-edit-input {
+  width: 80px;
+}
+
 .item-card-price-range {
   display: flex;
   justify-content: start;
@@ -280,8 +271,13 @@ function turnOffBid(alertId, bidId){
 
 .option-cell {
   display: flex;
+  align-items: center;
   font-size: 0.9em;
   height: 2vh;
+}
+
+.option-edit-input {
+  width: min(50px, 3vw);
 }
 
 .option-label {
@@ -301,22 +297,33 @@ function turnOffBid(alertId, bidId){
   gap: 10px;
 }
 
-.alarm-btn, .edit-btn, .complete-edit-btn, .cancel-edit-btn {
+.alarm-btn,
+.edit-btn,
+.complete-edit-btn,
+.cancel-edit-btn {
   height: 42px;
   border: 1px solid #515972;
 }
+
 /* comment css */
-.bid-title{
+.item-bid {
+  height: auto;
+}
+
+.bid-title {
   margin: 10px 0 10px 0;
 }
-.bid-list{
+
+.bid-list {
   margin: 0;
   padding: 0;
 }
-.bid-item{
+
+.bid-item {
   font-size: small;
 }
-.bid-delete-btn{
+
+.bid-delete-btn {
   background: #343741;
   border: none;
 }
@@ -394,7 +401,8 @@ function turnOffBid(alertId, bidId){
   margin-top: 15px;
 }
 
-.confirm-yes, .confirm-no {
+.confirm-yes,
+.confirm-no {
   padding: 8px 20px;
   border-radius: 4px;
   border: none;
@@ -409,5 +417,29 @@ function turnOffBid(alertId, bidId){
 .confirm-no {
   background: #515972;
   color: white;
+}
+
+@media(max-width:760px) {
+  .option-edit-input {
+    width: 6.5vh;
+  }
+
+  .alarm-btn,
+  .edit-btn,
+  .complete-edit-btn,
+  .cancel-edit-btn {
+    margin-top: 10px;
+    font-size: .8rem;
+    height: 5vh;
+    border: 1px solid #515972;
+  }
+
+  .price-edit-input {
+    width: 40vw;
+  }
+
+  .option-cell {
+    height: 3vh;
+  }
 }
 </style>

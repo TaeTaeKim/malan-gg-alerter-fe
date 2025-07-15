@@ -1,13 +1,8 @@
 <template>
   <div class="item-list">
-    <ItemCard
-      v-for="registeredItem in registeredItems"
-      :key="registeredItem.id"
-      :item="registeredItem"
-      @toggleAlarm="store.toggleAlarm(registeredItem.id)"
-      @delete = "store.deleteItem(registeredItem.id)"
-      @update = "store.updateItem(registeredItem.id, $event)"
-    />
+    <ItemCard v-for="registeredItem in registeredItems" :key="registeredItem.id" :item="registeredItem"
+      @toggleAlarm="store.toggleAlarm(registeredItem.id)" @delete="store.deleteItem(registeredItem.id)"
+      @update="store.updateItem(registeredItem.id, $event)" />
   </div>
 </template>
 <script setup>
@@ -21,10 +16,18 @@ const registeredItems = computed(() => store.registeredItems)
 <style scoped>
 .item-list {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 한 행에 4개 고정 */
+  grid-template-columns: repeat(3, 1fr);
+  /* 한 행에 4개 고정 */
   gap: 20px;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+}
+
+@media(max-width:760px) {
+  .item-list {
+    grid-template-columns: repeat(1, 1fr);
+    /* 한 행에 4개 고정 */
+  }
 }
 </style>
