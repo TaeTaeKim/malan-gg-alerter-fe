@@ -261,12 +261,17 @@ header {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 2000;
   font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .alarm-noti-disable {
   font-size: 25px;
   border: none;
   background: none;
+  margin-left: auto;
 }
 
 /* footer */
@@ -351,6 +356,22 @@ header {
 
   .items-section>h2 {
     font-size: 1.2rem;
+  }
+
+  .alarm-notice-window {
+    width: 80vw;
+    min-width: unset;
+    max-width: 95vw;
+    font-size: 1em;
+    padding: 10px 8px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .alarm-noti-disable {
+    font-size: 22px;
+    margin-left: auto;
   }
 }
 </style>
