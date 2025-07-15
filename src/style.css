@@ -21,23 +21,23 @@ a {
 a:hover {
   color: #535bf2;
 }
-.inline-block{
+.inline-block {
   display: inline-block;
 }
-.mt-03{
-  margin-top: .3rem;
+.mt-03 {
+  margin-top: 0.3rem;
 }
-.mr-03{
-  margin-right: .3rem;
+.mr-03 {
+  margin-right: 0.3rem;
 }
-.ml-03{
-  margin-left: .3rem;
+.ml-03 {
+  margin-left: 0.3rem;
 }
 
-.height100{
+.height100 {
   height: 100%;
 }
-.width100{
+.width100 {
   width: 100%;
 }
 
@@ -53,7 +53,7 @@ body {
 h1 {
   line-height: 1.1;
 }
-.width100{
+.width100 {
   width: 100%;
 }
 button {
@@ -81,7 +81,7 @@ button:focus-visible {
   margin: 0;
   text-align: initial;
   box-sizing: border-box;
-  background: #1D1E23;
+  background: #1d1e23;
 }
 
 @media (prefers-color-scheme: light) {

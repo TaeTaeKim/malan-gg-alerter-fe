@@ -1,48 +1,26 @@
 <template>
   <form @submit.prevent="onSubmit">
 
-      <div class="option-item preview-price-row">
-        <label for="lowPrice">가격 범위 설정</label>
-        <div class="price-range">
-          <input
-              id="lowPrice"
-              type="text"
-              v-model="formattedLowPrice"
-              placeholder="최소 가격을 설정해주세요"
-              @input="(e) => handlePriceInput('low',e)"
-              class="option-input preview-price-input"
-          />
-          <span>~</span>
-          <input
-              id="highPrice"
-              type="text"
-              v-model="formattedHighPrice"
-              placeholder="최대 가격을 설정해주세요"
-              @input="(e) => handlePriceInput('high',e)"
-              class="option-input preview-price-input"
-          />
-        </div>
+    <div class="option-item preview-price-row">
+      <label for="lowPrice">가격 범위 설정</label>
+      <div class="price-range">
+        <input id="lowPrice" type="text" v-model="formattedLowPrice" placeholder="최소 가격을 설정해주세요"
+          @input="(e) => handlePriceInput('low', e)" class="option-input preview-price-input" />
+        <span>~</span>
+        <input id="highPrice" type="text" v-model="formattedHighPrice" placeholder="최대 가격을 설정해주세요"
+          @input="(e) => handlePriceInput('high', e)" class="option-input preview-price-input" />
       </div>
+    </div>
     <div class="option-grid option-grid-4">
       <div v-for="option in firstRowOptions" :key="option.key" class="option-item">
         <label :for="option.key">{{ option.label }}</label>
-        <input
-            :id="option.key"
-            type="number"
-            v-model.number="optionValues[option.key]"
-            class="option-input"
-        />
+        <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
       </div>
     </div>
     <div class="option-grid option-grid-5">
       <div v-for="option in secondRowOptions" :key="option.key" class="option-item">
         <label :for="option.key">{{ option.label }}</label>
-        <input
-            :id="option.key"
-            type="number"
-            v-model.number="optionValues[option.key]"
-            class="option-input"
-        />
+        <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
       </div>
     </div>
     <div class="button-group">
@@ -88,43 +66,50 @@ function onSubmit() {
 </script>
 
 <style scoped>
-.price-range{
+.price-range {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 20px;
 
 }
-.price-range>span{
+
+.price-range>span {
   font-size: 25px;
 }
-.preview-price-row{
+
+.preview-price-row {
   margin-bottom: 3px;
   width: 98%;
 }
-.preview-price-input{
+
+.preview-price-input {
   font-size: 15px;
 }
 
-.preview-price-input::placeholder{
+.preview-price-input::placeholder {
   padding-left: 15px;
   font-size: 15px
 }
-.option-item{
+
+.option-item {
   margin-right: 20px;
 }
+
 .option-item label {
   display: block;
   font-weight: bold;
   margin-bottom: 2px;
 }
-.option-input{
+
+.option-input {
   height: 42px;
   width: 100%;
   background-color: #2B2F39;
   border: none;
   border-radius: 10px;
 }
+
 .option-grid-4 {
   display: grid;
   align-items: center;
@@ -144,7 +129,7 @@ function onSubmit() {
   margin-top: 20px;
 }
 
-.button-group >button{
+.button-group>button {
   height: 42px;
   border-radius: 8px;
   padding: 0 15px 0 15px;
@@ -173,5 +158,50 @@ function onSubmit() {
 
 .back-btn:hover {
   background-color: rgba(209, 213, 219, 0.1);
+}
+
+@media (max-width: 760px) {
+
+
+  .option-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .option-grid-5 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+
+  .option-item {
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .option-input {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .price-range {
+    flex-direction: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  .preview-price-row {
+    width: 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .button-group>button {
+    width: 100%;
+    font-size: 1rem;
+  }
 }
 </style>
