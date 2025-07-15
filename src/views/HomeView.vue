@@ -21,7 +21,7 @@
             <img src="@/assets/alarm-on.png" alt="alarm-on">
             <span>알람 시간 설정</span>
           </button>
-          <GlobalAlarmSettingsModal :is-open="isAlarmSettingsOpen" />
+          <GlobalAlarmSettingsModal :is-open="isAlarmSettingsOpen" @close="isAlarmSettingsOpen = false" />
         </div>
         <button @click="goToTimer" class="timer-btn">메랜 사냥 타이머</button>
         <button @click="handleLogout" class="logout-btn">로그아웃</button>
