@@ -420,6 +420,10 @@ function turnOffBid(alertId, bidId) {
 }
 
 @media(max-width:760px) {
+  .item-card {
+    height: auto;
+  }
+
   .option-edit-input {
     width: 6.5vh;
   }
