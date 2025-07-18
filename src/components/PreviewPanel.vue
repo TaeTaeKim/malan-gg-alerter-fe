@@ -1,7 +1,7 @@
 <template>
   <div class="trade-type-buttons" v-if="store.currentItem">
-    <button class="to-buy" :class="{ active: tradeType === 'buy' }" @click="tradeType = 'buy'">사고싶은</button>
-    <button class="to-sell" :class="{ active: tradeType === 'sell' }" @click="tradeType = 'sell'">팔고싶은</button>
+    <button class="to-buy" :class="{ active: tradeType === 'buy' }" @click="tradeType = 'buy'">사고싶어요</button>
+    <button class="to-sell" :class="{ active: tradeType === 'sell' }" @click="tradeType = 'sell'">팔고싶어요</button>
   </div>
   <div class="preview-panel" :class="panelBorderStyle" v-if="store.currentItem">
     <div class="preview-item-name">
