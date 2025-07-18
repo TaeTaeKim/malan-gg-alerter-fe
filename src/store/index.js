@@ -99,11 +99,11 @@ export const useMainStore = defineStore("main", {
     },
 
     /** 4) 등록 (Spring Boot 서버 post) */
-    async registerItem(itemId, option) {
+    async registerItem(itemId, option, tradeType) {
       // 서버 스펙: POST /alerter?itemId=<id>  body: ItemCondition JSON
       try {
         await axios.post(
-          `${__API_PREFIX__}/api/alerter?itemId=${itemId}&tradeType=SELL`,
+          `${__API_PREFIX__}/api/alerter?itemId=${itemId}&tradeType=${tradeType}`,
           option
         );
         // After successful registration, fetch the updated list

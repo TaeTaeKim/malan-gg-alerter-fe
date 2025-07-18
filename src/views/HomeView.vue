@@ -231,7 +231,7 @@ header {
 }
 
 .search-section {
-  height: 400px;
+  height: auto;
   margin-bottom: 40px;
 }
 
