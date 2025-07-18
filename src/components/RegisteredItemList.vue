@@ -1,16 +1,30 @@
 <template>
   <div class="item-list">
-    <ItemCard v-for="registeredItem in registeredItems" :key="registeredItem.id" :item="registeredItem"
+    <ItemCard v-for="registeredItem in filteredItems" :key="registeredItem.id" :item="registeredItem"
       @toggleAlarm="store.toggleAlarm(registeredItem.id)" @delete="store.deleteItem(registeredItem.id)"
       @update="store.updateItem(registeredItem.id, $event)" />
   </div>
 </template>
 <script setup>
-import { computed } from 'vue'
+import { computed, defineProps } from 'vue'
 import { useMainStore } from '@/store'
 import ItemCard from './ItemCard.vue'
+
+const props = defineProps({
+  tradeType: {
+    type: String,
+    required: true
+  }
+})
+
 const store = useMainStore()
-const registeredItems = computed(() => store.registeredItems)
+
+const filteredItems = computed(() => {
+  // When user wants to see their 'buy' list, we show items that are looking for 'SELL' type items from the server.
+  // When user wants to see their 'sell' list, we show items that are looking for 'BUY' type items from the server.
+  const serverTradeType = props.tradeType === 'buy' ? 'SELL' : 'BUY';
+  return store.registeredItems.filter(item => item.tradeType === serverTradeType);
+})
 </script>
 
 <style scoped>

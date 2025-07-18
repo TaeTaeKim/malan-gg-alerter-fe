@@ -7,23 +7,23 @@
 
 <script setup>
 import GlobalNotification from '@/components/GlobalNotification.vue'
-import {onBeforeUnmount, watch} from 'vue'
+import { onBeforeUnmount, watch } from 'vue'
 import { useMainStore } from '@/store'
-import {useAuthStore} from "@/store/auth.js";
+import { useAuthStore } from "@/store/auth.js";
 
 const store = useMainStore()
 const auth = useAuthStore()
 watch(
-    () => auth.isAuthenticated,
-    (isAuthenticated) => {
-      if (isAuthenticated) {
-        store.fetchRegisteredItems()
-        store.startBidPolling()
-      }else{
-        store.stopBidPolling()
-      }
-    },
-    { immediate: true }
+  () => auth.isAuthenticated,
+  (isAuthenticated) => {
+    if (isAuthenticated) {
+      store.fetchRegisteredItems()
+      store.startBidPolling()
+    } else {
+      store.stopBidPolling()
+    }
+  },
+  { immediate: true }
 )
 
 onBeforeUnmount(() => {
@@ -33,9 +33,11 @@ onBeforeUnmount(() => {
 
 <style>
 /* 글로벌 스타일 정의 */
-html, body {
+html,
+body {
   overflow-x: hidden;
 }
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
