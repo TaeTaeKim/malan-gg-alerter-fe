@@ -34,8 +34,17 @@
         <PreviewPanel />
       </div>
       <div class="items-section">
-        <h2>등록된 아이템</h2>
-        <RegisteredItemList />
+        <div class="list-header">
+          <div class="trade-type-selector">
+            <button @click="tradeType = 'buy'" :class="{ active: tradeType === 'buy' }">
+              사고싶은 아이템 <span class="item-count">{{ buyItemsCount }}</span>
+            </button>
+            <button @click="tradeType = 'sell'" :class="{ active: tradeType === 'sell' }">
+              팔고싶은 아이템 <span class="item-count">{{ sellItemsCount }}</span>
+            </button>
+          </div>
+        </div>
+        <RegisteredItemList :trade-type="tradeType" />
       </div>
     </div>
   </div>
@@ -61,10 +70,17 @@ import SearchBar from "@/components/SearchBar.vue";
 import GlobalAlarmSettingsModal from "@/components/GlobalAlarmSettingsModal.vue";
 import SupportModal from "@/components/SupportModal.vue";
 import { useUserStore } from '@/store/user'
+import { useMainStore } from '@/store'
 
 const router = useRouter()
 const userStore = useUserStore()
 const auth = useAuthStore()
+const mainStore = useMainStore()
+
+const buyItemsCount = computed(() => mainStore.registeredItems.filter(item => item.tradeType === 'SELL').length);
+const sellItemsCount = computed(() => mainStore.registeredItems.filter(item => item.tradeType === 'BUY').length);
+
+const tradeType = ref('buy');
 
 onMounted(async () => {
   if (!auth.isAuthenticated) {
@@ -230,6 +246,45 @@ header {
   margin-bottom: 20px;
 }
 
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.trade-type-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.trade-type-selector button {
+  padding: 8px 16px;
+  border-radius: 0;
+  border: none;
+  cursor: pointer;
+  background: #1D1E23;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.trade-type-selector button.active {
+  border-bottom: 3px solid #c83131;
+}
+
+.trade-type-selector button:last-child.active {
+  border-bottom: 3px solid #3172c8;
+}
+
+.item-count {
+  margin-left: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+}
 .search-section {
   height: auto;
   margin-bottom: 40px;
@@ -345,12 +400,17 @@ header {
     font-size: 0.7rem;
     padding: 2px 8px;
   }
+  .trade-type-selector button{
+    font-size: 1.2rem;
+    padding: 4px 8px;
+  }
 
   .global-alarm-btn>img {
     height: 18px;
   }
 
   .search-section {
+    margin-top: 16px;
     height: auto;
   }
 

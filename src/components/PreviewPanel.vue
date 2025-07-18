@@ -69,11 +69,11 @@ function clearCurrentItem() {
 
 .trade-type-buttons button {
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 4px 4px 0 0;
   border: 1px solid #484B56;
   cursor: pointer;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 18px;
   color: white;
   background-color: #404552;
   transition: background-color 0.3s, border-color 0.3s;
@@ -92,7 +92,7 @@ function clearCurrentItem() {
 .preview-panel {
   padding: 20px 20px 26px 30px;
   border: 1px solid #484B56;
-  border-radius: 8px;
+  border-radius: 0 8px 8px 8px;
   background-color: #404552;
   height: 310px;
   /* Fixed height instead of max-height */
@@ -209,7 +209,7 @@ function clearCurrentItem() {
 
 @media (max-width: 760px) {
   .trade-type-buttons{
-    margin-top: 10px;
+    margin-top: 24px;
   }
   .preview-item-info {
     display: flex;
