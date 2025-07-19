@@ -7,7 +7,7 @@
         <input id="lowPrice" type="text" v-model="formattedLowPrice" placeholder="입력 시 최소가격 체크"
           @input="(e) => handlePriceInput('low', e)" class="option-input preview-price-input" />
         <span>~</span>
-        <input id="highPrice" type="text" v-model="formattedHighPrice" placeholder="입력 시 최대가격 체크 최대 21억메소"
+        <input id="highPrice" type="text" v-model="formattedHighPrice" placeholder="입력 시 최대가격 체크 최대 99억메소"
           @input="(e) => handlePriceInput('high', e)" class="option-input preview-price-input" />
       </div>
     </div>
@@ -48,7 +48,7 @@ const formattedHighPrice = ref('')
 function handlePriceInput(type, e) {
   // Remove non-numeric characters from input
   let numericValue = e.target.value.replace(/[^0-9]/g, '')
-  const MAX_INT_VALUE = 2147483647;
+  const MAX_INT_VALUE = 9999999999;
 
   // In Kotlin, the server-side uses Int for price, which has a max value of 2,147,483,647.
   // To prevent overflow errors, we cap the input value at the max Int value on the client-side.
