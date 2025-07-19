@@ -27,8 +27,11 @@
             <template v-if="isEditing">
               <input type="number" v-model.number="editedOptions.highPrice" class="price-edit-input" /> 메소
             </template>
+            <template v-else-if="item.option.highPrice != null">
+              {{ item.option.highPrice.toLocaleString() }} 메소
+            </template>
             <template v-else>
-              {{ item.option.highPrice?.toLocaleString() || 0 }} 메소
+              상한 없음
             </template>
           </div>
         </div>
