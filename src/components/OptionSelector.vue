@@ -2,12 +2,12 @@
   <form @submit.prevent="onSubmit">
 
     <div class="option-item preview-price-row">
-      <label for="lowPrice">가격 범위 설정</label>
+      <label for="lowPrice">가격 범위 설정 : 미설정 시 체크하지 않습니다</label>
       <div class="price-range">
-        <input id="lowPrice" type="text" v-model="formattedLowPrice" placeholder="최소 가격을 설정해주세요"
+        <input id="lowPrice" type="text" v-model="formattedLowPrice" placeholder="입력 시 최소가격 체크"
           @input="(e) => handlePriceInput('low', e)" class="option-input preview-price-input" />
         <span>~</span>
-        <input id="highPrice" type="text" v-model="formattedHighPrice" placeholder="최대 가격을 설정해주세요"
+        <input id="highPrice" type="text" v-model="formattedHighPrice" placeholder="입력 시 최대가격 체크 최대 21억메소"
           @input="(e) => handlePriceInput('high', e)" class="option-input preview-price-input" />
       </div>
     </div>
@@ -46,10 +46,22 @@ const formattedLowPrice = ref('')
 const formattedHighPrice = ref('')
 
 function handlePriceInput(type, e) {
-  const numericValue = e.target.value.replace(/[^0-9]/g, '')
+  // Remove non-numeric characters from input
+  let numericValue = e.target.value.replace(/[^0-9]/g, '')
+  const MAX_INT_VALUE = 2147483647;
+
+  // In Kotlin, the server-side uses Int for price, which has a max value of 2,147,483,647.
+  // To prevent overflow errors, we cap the input value at the max Int value on the client-side.
+  if (numericValue) {
+    const num = parseInt(numericValue, 10);
+    if (num > MAX_INT_VALUE) {
+      numericValue = MAX_INT_VALUE.toString();
+    }
+  }
+
   optionValues[`${type}Price`] = parseInt(numericValue) || null
 
-  // Update corresponding formatted ref
+  // Update corresponding formatted ref to show comma-separated value
   const formattedRef = type === 'low' ? formattedLowPrice : formattedHighPrice
   formattedRef.value = numericValue ? Number(numericValue).toLocaleString() : ''
 }
@@ -108,6 +120,10 @@ function onSubmit() {
   background-color: #2B2F39;
   border: none;
   border-radius: 10px;
+}
+
+.option-input::placeholder {
+  color: #d1d5db;
 }
 
 .option-grid-4 {
@@ -182,6 +198,10 @@ function onSubmit() {
   .option-input {
     width: 100%;
     font-size: 1rem;
+  }
+
+  .option-input::placeholder {
+    font-size: 12px;
   }
 
   .price-range {
