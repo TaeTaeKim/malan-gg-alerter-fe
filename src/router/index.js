@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import LoginView from "@/views/LoginView.vue";
 import HomeView from "@/views/HomeView.vue";
 import AuthCallBack from "@/views/AuthCallBack.vue";
+import NotFound from "@/views/NotFound.vue"; // Import the NotFound component
 import {useAuthStore} from "@/store/auth";
 
 const router = createRouter({
@@ -20,6 +21,12 @@ const router = createRouter({
       path: "/auth/callback",
       component: AuthCallBack,
     },
+    // Catch-all route for 404 Not Found pages
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: NotFound
+    }
   ],
 });
 router.beforeEach((to, from, next) => {
