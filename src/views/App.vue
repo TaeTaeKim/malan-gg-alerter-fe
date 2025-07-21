@@ -7,28 +7,6 @@
 
 <script setup>
 import GlobalNotification from '@/components/GlobalNotification.vue'
-import { onBeforeUnmount, watch } from 'vue'
-import { useMainStore } from '@/store'
-import { useAuthStore } from "@/store/auth.js";
-
-const store = useMainStore()
-const auth = useAuthStore()
-watch(
-  () => auth.isAuthenticated,
-  (isAuthenticated) => {
-    if (isAuthenticated) {
-      store.fetchRegisteredItems()
-      store.startBidPolling()
-    } else {
-      store.stopBidPolling()
-    }
-  },
-  { immediate: true }
-)
-
-onBeforeUnmount(() => {
-  store.stopBidPolling()
-})
 </script>
 
 <style>

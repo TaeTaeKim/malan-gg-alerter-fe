@@ -61,16 +61,16 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/store/auth'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {useAuthStore} from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
 import SearchBar from "@/components/SearchBar.vue";
 import GlobalAlarmSettingsModal from "@/components/GlobalAlarmSettingsModal.vue";
 import SupportModal from "@/components/SupportModal.vue";
-import { useUserStore } from '@/store/user'
-import { useMainStore } from '@/store'
+import {useUserStore} from '@/store/user'
+import {useMainStore} from '@/store'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -86,9 +86,16 @@ onMounted(async () => {
   if (!auth.isAuthenticated) {
     router.push('/login')
   } else {
-    userStore.getCurrentUserInfo();
+    await mainStore.fetchRegisteredItems()
+    await userStore.getCurrentUserInfo();
+    mainStore.startBidPolling();
   }
 })
+
+onUnmounted(() => {
+    mainStore.stopBidPolling();
+})
+
 const handleLogout = async () => {
   await auth.logout()
   router.push('/login')

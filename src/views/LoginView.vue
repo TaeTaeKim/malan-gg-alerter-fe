@@ -6,7 +6,7 @@
     </div>
     <div class="button-group">
       <button class="login-btn" @click="redirectToDiscordLogin">
-        <img src="/static/discord-logo.png" alt="Discord" class="discord-icon" />
+        <img alt="Discord" class="discord-icon" src="https://cdn.discordapp.com/embed/avatars/0.png" />
         디스코드 로그인
       </button>
     </div>
@@ -91,6 +91,7 @@ h1 {
   width: clamp(24px, 3vw, 28px);  /* Increased discord icon size */
   height: clamp(24px, 3vw, 28px);
   margin-right: 8px;
+  border-radius: 30%;
   vertical-align: middle;
 }
 </style>
