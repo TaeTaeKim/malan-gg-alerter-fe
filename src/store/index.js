@@ -1,8 +1,7 @@
-// src/store/index.js
-import { defineStore } from "pinia";
-import { itemOptions } from "@/constants/itemOptions";
-import axios from "axios";
-import { reactive } from "vue";
+import {defineStore} from "pinia";
+import {itemOptions} from "@/constants/itemOptions";
+import {reactive} from "vue";
+import api from "@/plugins/axios";
 
 export const useMainStore = defineStore("main", {
   state: () => ({
@@ -20,7 +19,7 @@ export const useMainStore = defineStore("main", {
   actions: {
     /** 1) 전체 아이템 목록 조회하여 allItems에 저장 */
     async fetchAllItems() {
-      const res = await axios.get(`${__API_PREFIX__}/malangg/api/items`);
+      const res = await api.get(`/malangg/api/items`);
       // 가정: API가 [{ id: '1001', name: '초승달검' }, …] 형태로 준다고 하면:
       this.allItems = res.data.map((item) => ({
         id: item.itemCode,
@@ -79,7 +78,7 @@ export const useMainStore = defineStore("main", {
     },
     /** 4) 등록된 아이템 목록을 가져온다. */
     async fetchRegisteredItems() {
-      await axios.get(`${__API_PREFIX__}/api/alerter`).then((res) => {
+      await api.get(`/api/alerter`).then((res) => {
         this.registeredItems = res.data.map((resItem) => ({
           id: resItem.id,
           itemId: resItem.itemId,
@@ -102,8 +101,8 @@ export const useMainStore = defineStore("main", {
     async registerItem(itemId, option, tradeType) {
       // 서버 스펙: POST /alerter?itemId=<id>  body: ItemCondition JSON
       try {
-        await axios.post(
-          `${__API_PREFIX__}/api/alerter?itemId=${itemId}&tradeType=${tradeType}`,
+        await api.post(
+          `/api/alerter?itemId=${itemId}&tradeType=${tradeType}`,
           option
         );
         // After successful registration, fetch the updated list
@@ -115,7 +114,7 @@ export const useMainStore = defineStore("main", {
 
     /** 5) 수정 (PATCH) */
     async updateItem(alertId, newOption) {
-      await axios.patch(`${__API_PREFIX__}/api/alerter`, newOption, {
+      await api.patch(`/api/alerter`, newOption, {
         params: { alertId },
       });
       await this.getAllItemBids();
@@ -125,7 +124,7 @@ export const useMainStore = defineStore("main", {
 
     /** 6) 삭제 (DELETE) */
     async deleteItem(alertId) {
-      await axios.delete(`${__API_PREFIX__}/api/alerter`, {
+      await api.delete(`/api/alerter`, {
         params: { alertId: alertId },
       });
       this.registeredItems = this.registeredItems.filter(
@@ -136,7 +135,7 @@ export const useMainStore = defineStore("main", {
     /** (기존) 알람 토글 */
     async toggleAlarm(alertId) {
       const it = this.registeredItems.find((i) => i.id === alertId);
-      await axios.patch(`${__API_PREFIX__}/api/alerter/toggle/${alertId}`);
+      await api.patch(`/api/alerter/toggle/${alertId}`);
       if (it) it.alarmOn = !it.alarmOn;
     },
     startBidPolling() {
@@ -155,7 +154,7 @@ export const useMainStore = defineStore("main", {
     },
 
     async getAllItemBids() {
-      await axios.get(`${__API_PREFIX__}/api/alerter/bid`).then((res) => {
+      await api.get(`/api/alerter/bid`).then((res) => {
         Object.entries(res.data).forEach(([alertId, bids]) => {
           const alertIdNum = parseInt(alertId, 10);
           this.itemBids.set(alertIdNum, bids);
@@ -163,7 +162,7 @@ export const useMainStore = defineStore("main", {
       });
     },
     async turnOffBid(itemId, bidId) {
-      await axios.delete(`${__API_PREFIX__}/api/alerter/bid/${bidId}`);
+      await api.delete(`/api/alerter/bid/${bidId}`);
       await this.getAllItemBids();
     },
   },

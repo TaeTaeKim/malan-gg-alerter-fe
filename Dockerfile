@@ -1,6 +1,3 @@
-# 1 - Build Stage
-
-
 # 2 - Production Stage
 FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
