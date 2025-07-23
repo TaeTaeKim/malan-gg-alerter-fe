@@ -1,11 +1,12 @@
-import {defineStore} from "pinia";
-import {itemOptions} from "@/constants/itemOptions";
-import {reactive} from "vue";
+import { defineStore } from "pinia";
+import { itemOptions } from "@/constants/itemOptions";
+import { reactive } from "vue";
 import api from "@/plugins/axios";
+import { itemsData } from "@/data/itemsData.js";
 
 export const useMainStore = defineStore("main", {
   state: () => ({
-    // 현재 선택된 이미지
+    // 현재 선택된 아이템 정보
     currentItem: null,
     // 화면에 등록한 아이템 리스트 (로컬 상태)
     registeredItems: [], // { id, image, option, alarmOn }
@@ -63,15 +64,30 @@ export const useMainStore = defineStore("main", {
       return url;
     },
 
-    // 검색된 아이템 정보를 currentItem에 저장
+    // 검색된 아이템 정보를 currentItem에 저장 (JavaScript 모듈에서 직접 조회)
     fetchItem(query) {
       const item = this.allItems.find((i) => i.nameKorean === query);
       if (item) {
-        this.currentItem = {
-          id: item.id,
-          name: item.nameKorean,
-          iconUrl: this.getItemIconUrl(item.id),
-        };
+        const itemData = itemsData[item.id];
+        
+        if (itemData) {
+          this.currentItem = {
+            id: item.id,
+            name: item.nameKorean,
+            iconUrl: this.getItemIconUrl(item.id),
+            metaInfo: itemData.metaInfo,
+            typeInfo: itemData.typeInfo,
+          };
+        } else {
+          // Fallback if item not found in data
+          this.currentItem = {
+            id: item.id,
+            name: item.nameKorean,
+            iconUrl: this.getItemIconUrl(item.id),
+            metaInfo: {},
+            typeInfo: {},
+          };
+        }
       } else {
         this.currentItem = null;
       }

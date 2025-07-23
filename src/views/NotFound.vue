@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import alarmyIcon from '/public/static/logo.png'
+import alarmyIcon from '/static/logo.png?url'
 </script>
 
 <style scoped>
@@ -40,7 +40,8 @@ h1 {
 p {
   font-size: 1.2rem;
   margin: 1rem 0 2rem 0;
-  color: #d1d5db; /* Lighter gray for sub-text */
+  color: #d1d5db;
+  /* Lighter gray for sub-text */
 }
 
 .links-container {

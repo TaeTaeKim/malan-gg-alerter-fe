@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="preview-right">
-        <OptionSelector @submit="addItem" @back="clearCurrentItem" />
+        <OptionSelector :current-item="store.currentItem" @submit="addItem" @back="clearCurrentItem" />
       </div>
     </div>
   </div>
@@ -49,7 +49,7 @@ const panelBorderStyle = computed(() => {
 async function addItem(optionData) {
   // 서버에 등록할 때는 거래 타입을 반대로 설정 -> 사용자가 '사고싶은'을 선택하면 서버에서는 "SELL"타입의 아이템을 메랜지지에서 가져와서 응답
   const serverTradeType = tradeType.value === 'buy' ? 'SELL' : 'BUY';
-  await store.registerItem(store.currentItem.id, { ...optionData } , serverTradeType)
+  await store.registerItem(store.currentItem.id, { ...optionData }, serverTradeType)
   clearCurrentItem()
 }
 
@@ -208,9 +208,10 @@ function clearCurrentItem() {
 }
 
 @media (max-width: 760px) {
-  .trade-type-buttons{
+  .trade-type-buttons {
     margin-top: 24px;
   }
+
   .preview-item-info {
     display: flex;
     flex-direction: column;

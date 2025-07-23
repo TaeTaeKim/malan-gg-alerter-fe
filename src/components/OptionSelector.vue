@@ -33,6 +33,14 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { itemOptions } from '@/constants/itemOptions'
+import { useMainStore } from '../store'
+
+const props = defineProps({
+  currentItem: {
+    type: Object,
+    default: null
+  }
+})
 
 const firstRowOptions = itemOptions.slice(2, 6) // 힘, 민첩, 인트, 럭
 const secondRowOptions = itemOptions.slice(6) // 공격력, 마력, 합마, 명중률, 이동속도
