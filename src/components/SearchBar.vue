@@ -4,8 +4,8 @@
       <div class="search-input-wrapper">
         <img src="@/assets/search-icon.png" alt="search icon" class="search-icon">
         <input type="text" :value=query @input="onInput" @compositionStart="onCompositionStart"
-          @compositionEnd="onCompositionEnd" @keyup.enter="onSearch" @keydown="onKeyDown"
-          placeholder="알람 등록하고 싶은 아이템을 검색하세요" class="search-input" />
+          @compositionEnd="onCompositionEnd" @keydown="onKeyDown" placeholder="알람 등록하고 싶은 아이템을 검색하세요"
+          class="search-input" />
         <button @click="onSearch" class="search-btn">검색</button>
       </div>
     </div>
@@ -20,7 +20,7 @@
 </template>
 <script setup>
 import { ref } from 'vue'
-import { useMainStore } from '@/store'
+import { useMainStore } from '../store/index'
 
 const query = ref('')
 const isComposing = ref(false)
@@ -44,9 +44,12 @@ function onKeyDown(e) {
         : selectedIndex.value - 1
       break
     case 'Enter':
+      e.preventDefault() // Prevent the keyup.enter event from firing
       if (selectedIndex.value >= 0) {
         onClick(candidates.value[selectedIndex.value])
         selectedIndex.value = -1
+      } else {
+        onSearch() // Call onSearch only when no item is selected
       }
       break
   }

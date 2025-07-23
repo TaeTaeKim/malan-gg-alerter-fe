@@ -6,7 +6,7 @@
   </div>
 </template>
 <script setup>
-import { computed, defineProps } from 'vue'
+import { computed } from 'vue'
 import { useMainStore } from '@/store'
 import ItemCard from './ItemCard.vue'
 
