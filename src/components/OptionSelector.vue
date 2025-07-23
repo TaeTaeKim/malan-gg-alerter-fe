@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { itemOptions } from '@/constants/itemOptions'
 import { useMainStore } from '../store'
 
@@ -49,6 +49,41 @@ const optionValues = reactive({
   highPrice: null
 })
 firstRowOptions.concat(secondRowOptions).forEach(opt => optionValues[opt.key] = null)
+
+// Function to populate default values from currentItem metaInfo
+function populateDefaultValues() {
+  // First, reset all option values to null (clear previous values)
+  firstRowOptions.concat(secondRowOptions).forEach(opt => {
+    optionValues[opt.key] = null
+  })
+  
+  if (props.currentItem?.metaInfo) {
+    const metaInfo = props.currentItem.metaInfo
+    
+    // Map metaInfo keys to form field keys
+    const keyMapping = {
+      'incSTR': 'str',
+      'incDEX': 'dex', 
+      'incINT': 'int',
+      'incLUK': 'luk',
+      'incPAD': 'pad',
+      'incMAD': 'mad',
+      'incSpeed': 'speed',
+      'incACC': 'accuracy',
+      'incJump': 'jump'
+    }
+    
+    // Set default values from metaInfo
+    Object.entries(keyMapping).forEach(([metaKey, formKey]) => {
+      if (metaInfo[metaKey] !== undefined && metaInfo[metaKey] > 0) {
+        optionValues[formKey] = metaInfo[metaKey]
+      }
+    })
+  }
+}
+
+// Watch for currentItem changes and populate defaults
+watch(() => props.currentItem, populateDefaultValues, { immediate: true })
 
 const formattedLowPrice = ref('')
 const formattedHighPrice = ref('')
