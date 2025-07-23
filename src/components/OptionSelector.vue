@@ -56,14 +56,14 @@ function populateDefaultValues() {
   firstRowOptions.concat(secondRowOptions).forEach(opt => {
     optionValues[opt.key] = null
   })
-  
+
   if (props.currentItem?.metaInfo) {
     const metaInfo = props.currentItem.metaInfo
-    
+
     // Map metaInfo keys to form field keys
     const keyMapping = {
       'incSTR': 'str',
-      'incDEX': 'dex', 
+      'incDEX': 'dex',
       'incINT': 'int',
       'incLUK': 'luk',
       'incPAD': 'pad',
@@ -72,7 +72,7 @@ function populateDefaultValues() {
       'incACC': 'accuracy',
       'incJump': 'jump'
     }
-    
+
     // Set default values from metaInfo
     Object.entries(keyMapping).forEach(([metaKey, formKey]) => {
       if (metaInfo[metaKey] !== undefined && metaInfo[metaKey] > 0) {
