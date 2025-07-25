@@ -8,7 +8,7 @@ export const itemOptions = [
   { key: "pad", label: "공격력" },
   { key: "mad", label: "마력" },
   { key: "hapma", label: "합마" },
-  { key: "accuracy", label: "명중률" },
-  { key: "speed", label: "이동속도" },
-  { key: "jump", label: "점프력" },
+  { key: "accuracy", label: "명중" },
+  { key: "speed", label: "이속" },
+  { key: "jump", label: "점프" },
 ];
