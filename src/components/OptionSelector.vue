@@ -11,7 +11,7 @@
           @input="(e) => handlePriceInput('high', e)" class="option-input preview-price-input" />
       </div>
     </div>
-    <div class="option-grid option-grid-4">
+    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="option-grid option-grid-4">
       <div v-for="option in firstRowOptions" :key="option.key" class="option-item">
         <div class="option-header">
           <label :for="option.key" class="option-label">{{ option.label }}</label>
@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div class="option-grid option-grid-5">
+    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="option-grid option-grid-5">
       <div v-for="option in secondRowOptions" :key="option.key" class="option-item">
         <div class="option-header">
           <label :for="option.key" class="option-label">{{ option.label }}</label>
@@ -121,7 +121,7 @@ function populateDefaultValues() {
     optionValues[getRangeInputKey(opt.key, 'max')] = null
   })
 
-  if (props.currentItem?.metaInfo) {
+  if (props.currentItem?.metaInfo && props.currentItem?.typeInfo?.overallCategory === 'Equip') {
     const metaInfo = props.currentItem.metaInfo
 
     // 아이템의 정옵 필드 : component 키 매핑
