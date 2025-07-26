@@ -50,7 +50,12 @@
               <input type="number" v-model.number="editedOptions[opt.key]" class="option-edit-input" />
             </template>
             <template v-else>
-              {{ item.option[opt.key] }}
+              <template v-if="item.option[`high${opt.key.toUpperCase()}`] != null">
+                {{ item.option[opt.key] || 0 }}~{{ item.option[`high${opt.key.toUpperCase()}`] }}
+              </template>
+              <template v-else>
+                {{ item.option[opt.key] }}
+              </template>
             </template>
           </div>
         </div>
