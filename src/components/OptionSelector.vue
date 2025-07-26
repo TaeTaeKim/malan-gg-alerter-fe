@@ -11,16 +11,44 @@
           @input="(e) => handlePriceInput('high', e)" class="option-input preview-price-input" />
       </div>
     </div>
-    <div class="option-grid option-grid-4">
+    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="option-grid option-grid-4">
       <div v-for="option in firstRowOptions" :key="option.key" class="option-item">
-        <label :for="option.key">{{ option.label }}</label>
-        <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
+        <div class="option-header">
+          <label :for="option.key" class="option-label">{{ option.label }}</label>
+          <button type="button" class="range-toggle-btn" @click="toggleRange(option.key)">
+            {{ rangeStates[option.key] ? '단일값' : '범위설정' }}
+          </button>
+        </div>
+        <div v-if="!rangeStates[option.key]" class="single-input">
+          <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
+        </div>
+        <div v-else class="range-inputs">
+          <input :id="option.key" type="number" v-model.number="optionValues[option.key]"
+            class="option-input range-input" placeholder="최소값" />
+          <input :id="getRangeInputKey(option.key, 'max')" type="number"
+            v-model.number="optionValues[getRangeInputKey(option.key, 'max')]" class="option-input range-input"
+            placeholder="최대값" />
+        </div>
       </div>
     </div>
-    <div class="option-grid option-grid-5">
+    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="option-grid option-grid-5">
       <div v-for="option in secondRowOptions" :key="option.key" class="option-item">
-        <label :for="option.key">{{ option.label }}</label>
-        <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
+        <div class="option-header">
+          <label :for="option.key" class="option-label">{{ option.label }}</label>
+          <button type="button" class="range-toggle-btn" @click="toggleRange(option.key)">
+            {{ rangeStates[option.key] ? '단일값' : '범위설정' }}
+          </button>
+        </div>
+        <div v-if="!rangeStates[option.key]" class="single-input">
+          <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
+        </div>
+        <div v-else class="range-inputs">
+          <input :id="option.key" type="number" v-model.number="optionValues[option.key]"
+            class="option-input range-input" placeholder="최소값" />
+          <input :id="getRangeInputKey(option.key, 'max')" type="number"
+            v-model.number="optionValues[getRangeInputKey(option.key, 'max')]" class="option-input range-input"
+            placeholder="최대값" />
+        </div>
       </div>
     </div>
     <div class="button-group">
@@ -32,7 +60,7 @@
 
 <script setup>
 import { reactive, ref, watch } from 'vue'
-import { itemOptions } from '@/constants/itemOptions'
+import { itemOptions } from '../constants/itemOptions'
 import { useMainStore } from '../store'
 
 const props = defineProps({
@@ -44,23 +72,59 @@ const props = defineProps({
 
 const firstRowOptions = itemOptions.slice(2, 6) // 힘, 민첩, 인트, 럭
 const secondRowOptions = itemOptions.slice(6) // 공격력, 마력, 합마, 명중률, 이동속도
+
+// 특정 Option key가 단일값인지, 범위값인지 체크하는 함수
+const rangeStates = reactive({})
 const optionValues = reactive({
   lowPrice: null,
   highPrice: null
 })
-firstRowOptions.concat(secondRowOptions).forEach(opt => optionValues[opt.key] = null)
 
-// Function to populate default values from currentItem metaInfo
+// input tag id 값 만드는 함수
+function getRangeInputKey(optionKey, type) {
+  return type === 'min' ? optionKey : `high${optionKey.toUpperCase()}`
+}
+
+
+// OptionValues 초기화 -> Server ItemCondition 과 맞아야함.
+firstRowOptions.concat(secondRowOptions).forEach(opt => {
+  optionValues[opt.key] = null
+  optionValues[getRangeInputKey(opt.key, 'max')] = null
+  rangeStates[opt.key] = false
+})
+
+// 단일값 <-> 범위값 토글 함수
+// 토글 시에 들어있던 value 를 같이 넣어준다.
+function toggleRange(optionKey) {
+  const isCurrentlyRange = rangeStates[optionKey]
+
+  if (isCurrentlyRange) {
+    // Switching from range to single - keep the min value (original key)
+    const maxKey = getRangeInputKey(optionKey, 'max')
+    optionValues[maxKey] = null
+  } else {
+    // Switching from single to range - copy the value to max if it exists
+    const currentVal = optionValues[optionKey]
+    if (currentVal !== null) {
+      optionValues[getRangeInputKey(optionKey, 'max')] = currentVal
+    }
+  }
+
+  rangeStates[optionKey] = !isCurrentlyRange
+}
+
+// Item Meta Info 로 초기 옵션을 채우는 함수.
 function populateDefaultValues() {
   // First, reset all option values to null (clear previous values)
   firstRowOptions.concat(secondRowOptions).forEach(opt => {
     optionValues[opt.key] = null
+    optionValues[getRangeInputKey(opt.key, 'max')] = null
   })
 
-  if (props.currentItem?.metaInfo) {
+  if (props.currentItem?.metaInfo && props.currentItem?.typeInfo?.overallCategory === 'Equip') {
     const metaInfo = props.currentItem.metaInfo
 
-    // Map metaInfo keys to form field keys
+    // 아이템의 정옵 필드 : component 키 매핑
     const keyMapping = {
       'incSTR': 'str',
       'incDEX': 'dex',
@@ -76,7 +140,14 @@ function populateDefaultValues() {
     // Set default values from metaInfo
     Object.entries(keyMapping).forEach(([metaKey, formKey]) => {
       if (metaInfo[metaKey] !== undefined && metaInfo[metaKey] > 0) {
-        optionValues[formKey] = metaInfo[metaKey]
+        if (rangeStates[formKey]) {
+          // If in range mode, set both min (original key) and max to the same value
+          optionValues[formKey] = metaInfo[metaKey]
+          optionValues[getRangeInputKey(formKey, 'max')] = metaInfo[metaKey]
+        } else {
+          // If in single mode, set the single value
+          optionValues[formKey] = metaInfo[metaKey]
+        }
       }
     })
   }
@@ -116,6 +187,23 @@ function onSubmit() {
     alert('최소 가격이 최대 가격보다 클 수 없습니다.')
     return
   }
+
+  // Validate range inputs - min should not be greater than max
+  const allOptions = firstRowOptions.concat(secondRowOptions)
+  for (const option of allOptions) {
+    if (rangeStates[option.key]) {
+      const minVal = optionValues[option.key]
+      const maxVal = optionValues[getRangeInputKey(option.key, 'max')]
+
+      if (minVal !== null && maxVal !== null && minVal > maxVal) {
+        alert(`${option.label}의 최소값이 최대값보다 클 수 없습니다.`)
+        return
+      }
+    }
+  }
+
+  // 
+
   emit('submit', { ...optionValues })
 }
 </script>
@@ -151,10 +239,41 @@ function onSubmit() {
   margin-right: 20px;
 }
 
-.option-item label {
-  display: block;
+.option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.option-header label {
   font-weight: bold;
-  margin-bottom: 2px;
+  flex: 1;
+}
+
+.range-toggle-btn {
+  background: #374151;
+  color: #d1d5db;
+  border: 1px solid #6b7280;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+.range-toggle-btn:hover {
+  background: #4b5563;
+}
+
+.range-inputs {
+  display: flex;
+  gap: 4px;
+}
+
+.range-input {
+  flex: 1;
 }
 
 .option-input {
@@ -223,7 +342,7 @@ function onSubmit() {
 
 
   .option-grid-4 {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
 
@@ -236,6 +355,23 @@ function onSubmit() {
   .option-item {
     margin-right: 0;
     width: 100%;
+  }
+
+  .option-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    margin-bottom: 6px;
+  }
+
+  .range-toggle-btn {
+    font-size: 0.65rem;
+    padding: 1px 4px;
+    min-width: 50px;
+  }
+
+  .range-inputs {
+    gap: 2px;
   }
 
   .option-input {

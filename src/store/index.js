@@ -100,9 +100,17 @@ export const useMainStore = defineStore("main", {
           itemId: resItem.itemId,
           koreanName: resItem.itemName,
           imageUrl: this.getItemIconUrl(resItem.itemId),
-          option: Object.fromEntries(
-            itemOptions.map((opt) => [opt.key, resItem.itemOptions?.[opt.key]])
-          ),
+          option: {
+            ...Object.fromEntries(
+              itemOptions.map((opt) => [opt.key, resItem.itemOptions?.[opt.key]])
+            ),
+            // Include high{KEY} values for range inputs
+            ...Object.fromEntries(
+              itemOptions
+                .filter(opt => opt.key !== 'lowPrice' && opt.key !== 'highPrice')
+                .map((opt) => [`high${opt.key.toUpperCase()}`, resItem.itemOptions?.[`high${opt.key.toUpperCase()}`]])
+            )
+          },
           tradeType: resItem.tradeType,
           alarmOn: resItem.isAlarm,
         }));

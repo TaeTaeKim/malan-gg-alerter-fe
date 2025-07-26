@@ -14,20 +14,12 @@
         <div class="item-card-price">
           <div class="item-card-price-range">
             <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03 mt-03">
-            <template v-if="isEditing">
-              <input type="number" v-model.number="editedOptions.lowPrice" class="price-edit-input" /> 메소
-            </template>
-            <template v-else>
-              {{ item.option.lowPrice?.toLocaleString() || 0 }} 메소
-            </template>
+            {{ item.option.lowPrice?.toLocaleString() || 0 }} 메소
             <div class="ml-03" style="font-size: 19px">~</div>
           </div>
           <div class="item-card-price-range">
             <img src="/static/meso.png" alt="meso" width="12" height="15" class="inline-block mr-03 mt-03">
-            <template v-if="isEditing">
-              <input type="number" v-model.number="editedOptions.highPrice" class="price-edit-input" /> 메소
-            </template>
-            <template v-else-if="item.option.highPrice != null">
+            <template v-if="item.option.highPrice != null">
               {{ item.option.highPrice.toLocaleString() }} 메소
             </template>
             <template v-else>
@@ -46,8 +38,8 @@
             {{ opt.label }}
           </div>
           <div class="option-value">
-            <template v-if="isEditing">
-              <input type="number" v-model.number="editedOptions[opt.key]" class="option-edit-input" />
+            <template v-if="item.option[`high${opt.key.toUpperCase()}`] != null">
+              {{ item.option[opt.key] || 0 }}~{{ item.option[`high${opt.key.toUpperCase()}`] }}
             </template>
             <template v-else>
               {{ item.option[opt.key] }}
@@ -57,17 +49,10 @@
       </div>
     </div>
     <div class="edit-alarm-btn">
-      <template v-if="!isEditing">
-        <button class="item-btn edit-btn" @click="startEdit">편집하기</button>
-        <button class="item-btn alarm-btn" :class="{ active: item.alarmOn }" @click="$emit('toggleAlarm')">
-          <img :src="item.alarmOn ? onIcon : offIcon" alt="alarm toggle" class="alarm-img" />
-        </button>
-      </template>
-      <template v-else>
-        <button v-if="isEditing" class="item-btn complete-edit-btn" @click="completeEdit">저장 후 닫기
-        </button>
-        <button @click="cancelEdit" class="item-btn cancel-edit-btn">취소</button>
-      </template>
+      <button class="item-btn edit-btn" @click="showEditModal = true">편집하기</button>
+      <button class="item-btn alarm-btn" :class="{ active: item.alarmOn }" @click="$emit('toggleAlarm')">
+        <img :src="item.alarmOn ? onIcon : offIcon" alt="alarm toggle" class="alarm-img" />
+      </button>
     </div>
     <div class="item-bid">
       <h5 class="bid-title" style="margin: 7px;">코멘트목록</h5>
@@ -92,6 +77,9 @@
     </div>
   </div>
 
+  <!-- Edit modal -->
+  <EditModal v-if="showEditModal" :initial-values="item.option" @save="handleSave" @cancel="showEditModal = false" />
+
   <!-- Add confirmation modal -->
   <div v-if="showConfirmModal" class="confirm-modal">
     <div class="confirm-modal-content">
@@ -105,18 +93,19 @@
 </template>
 <script setup>
 import { itemOptions } from '@/constants/itemOptions'
-import { computed, reactive, ref } from "vue";
+import { computed, ref } from "vue";
 import onIcon from '@/assets/alarm-on.png'
 import offIcon from '@/assets/alarm-off.png'
 import { useMainStore } from '@/store/index.js'
+import EditModal from './EditModal.vue'
 
 
 const props = defineProps({
   item: Object
 })
 const emit = defineEmits(["update", "delete", "toggleAlarm"]);
-const isEditing = ref(false);
-const editedOptions = reactive({})
+const showEditModal = ref(false);
+
 const otherOptions = itemOptions
   .filter(opt => opt.key !== 'highPrice' && opt.key !== 'lowPrice')
   .map(opt => ({
@@ -124,24 +113,9 @@ const otherOptions = itemOptions
     label: opt.label.length > 2 ? opt.label.substring(0, 2) : opt.label
   }))
 
-function startEdit() {
-  isEditing.value = true;
-  otherOptions.forEach(opt => {
-    editedOptions[opt.key] = props.item.option[opt.key]
-  });
-
-  editedOptions.highPrice = props.item.option.highPrice;
-  editedOptions.lowPrice = props.item.option.lowPrice;
-
-}
-
-function completeEdit() {
-  isEditing.value = false;
-  emit('update', { ...editedOptions })
-}
-
-function cancelEdit() {
-  isEditing.value = false;
+function handleSave(updatedOptions) {
+  showEditModal.value = false;
+  emit('update', updatedOptions)
 }
 
 const showConfirmModal = ref(false);
@@ -235,9 +209,6 @@ function turnOffBid(alertId, bidId) {
   height: 20px;
 }
 
-.price-edit-input {
-  width: 80px;
-}
 
 .item-card-price-range {
   display: flex;
@@ -279,9 +250,6 @@ function turnOffBid(alertId, bidId) {
   height: 2vh;
 }
 
-.option-edit-input {
-  width: min(50px, 3vw);
-}
 
 .option-label {
   color: #8C8FA3;
@@ -301,9 +269,7 @@ function turnOffBid(alertId, bidId) {
 }
 
 .alarm-btn,
-.edit-btn,
-.complete-edit-btn,
-.cancel-edit-btn {
+.edit-btn {
   height: 42px;
   border: 1px solid #515972;
 }
@@ -357,25 +323,6 @@ function turnOffBid(alertId, bidId) {
   background: #515972;
 }
 
-.complete-edit-btn {
-  width: 78%;
-  color: white;
-  background: #343741;
-}
-
-.complete-edit-btn:hover {
-  background: #515972;
-}
-
-.cancel-edit-btn {
-  width: 22%;
-  color: white;
-  background: #343741;
-}
-
-.cancel-edit-btn:hover {
-  background: #b91c1c;
-}
 
 .confirm-modal {
   position: fixed;
@@ -427,22 +374,12 @@ function turnOffBid(alertId, bidId) {
     height: auto;
   }
 
-  .option-edit-input {
-    width: 6.5vh;
-  }
-
   .alarm-btn,
-  .edit-btn,
-  .complete-edit-btn,
-  .cancel-edit-btn {
+  .edit-btn {
     margin-top: 10px;
     font-size: .8rem;
     height: 5vh;
     border: 1px solid #515972;
-  }
-
-  .price-edit-input {
-    width: 40vw;
   }
 
   .option-cell {
