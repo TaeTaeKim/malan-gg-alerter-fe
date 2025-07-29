@@ -69,7 +69,7 @@ export const useMainStore = defineStore("main", {
       const item = this.allItems.find((i) => i.nameKorean === query);
       if (item) {
         const itemData = itemsData[item.id];
-        
+
         if (itemData) {
           this.currentItem = {
             id: item.id,
@@ -102,14 +102,22 @@ export const useMainStore = defineStore("main", {
           imageUrl: this.getItemIconUrl(resItem.itemId),
           option: {
             ...Object.fromEntries(
-              itemOptions.map((opt) => [opt.key, resItem.itemOptions?.[opt.key]])
+              itemOptions.map((opt) => [
+                opt.key,
+                resItem.itemOptions?.[opt.key],
+              ])
             ),
             // Include high{KEY} values for range inputs
             ...Object.fromEntries(
               itemOptions
-                .filter(opt => opt.key !== 'lowPrice' && opt.key !== 'highPrice')
-                .map((opt) => [`high${opt.key.toUpperCase()}`, resItem.itemOptions?.[`high${opt.key.toUpperCase()}`]])
-            )
+                .filter(
+                  (opt) => opt.key !== "lowPrice" && opt.key !== "highPrice"
+                )
+                .map((opt) => [
+                  `high${opt.key.toUpperCase()}`,
+                  resItem.itemOptions?.[`high${opt.key.toUpperCase()}`],
+                ])
+            ),
           },
           tradeType: resItem.tradeType,
           alarmOn: resItem.isAlarm,
