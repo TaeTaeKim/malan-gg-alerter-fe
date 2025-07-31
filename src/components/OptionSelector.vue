@@ -61,7 +61,6 @@
 <script setup>
 import { reactive, ref, watch } from 'vue'
 import { itemOptions } from '../constants/itemOptions'
-import { useMainStore } from '../store'
 
 const props = defineProps({
   currentItem: {
@@ -70,8 +69,8 @@ const props = defineProps({
   }
 })
 
-const firstRowOptions = itemOptions.slice(2, 6) // 힘, 민첩, 인트, 럭
-const secondRowOptions = itemOptions.slice(6) // 공격력, 마력, 합마, 명중률, 이동속도
+const firstRowOptions = itemOptions.slice(2, 7) // 힘, 민첩, 인트, 럭, 업횟
+const secondRowOptions = itemOptions.slice(7) // 공격력, 마력, 합마, 명중률, 이동속도
 
 // 특정 Option key가 단일값인지, 범위값인지 체크하는 함수
 const rangeStates = reactive({})
@@ -291,7 +290,7 @@ function onSubmit() {
 .option-grid-4 {
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   margin-bottom: 3px;
 }
 

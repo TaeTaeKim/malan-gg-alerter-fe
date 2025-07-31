@@ -74,8 +74,8 @@ const props = defineProps({
 
 const emit = defineEmits(['save', 'cancel'])
 
-const firstRowOptions = itemOptions.slice(2, 6) // 힘, 민첩, 인트, 럭
-const secondRowOptions = itemOptions.slice(6) // 공격력, 마력, 합마, 명중률, 이동속도
+const firstRowOptions = itemOptions.slice(2, 7) // 힘, 민첩, 인트, 럭
+const secondRowOptions = itemOptions.slice(7) // 공격력, 마력, 합마, 명중률, 이동속도
 
 const rangeStates = reactive({})
 const optionValues = reactive({})
@@ -288,7 +288,7 @@ initializeValues()
 .option-grid-4 {
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   margin-bottom: 3px;
 }
 
