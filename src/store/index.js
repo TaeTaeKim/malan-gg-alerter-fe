@@ -3,6 +3,7 @@ import { itemOptions } from "../constants/itemOptions";
 import { reactive } from "vue";
 import api from "@/plugins/axios";
 import { itemsData } from "@/data/itemsData.js";
+import { searchWithKoreanShortcut } from "../utils/koreanShortcut.js";
 
 export const useMainStore = defineStore("main", {
   state: () => ({
@@ -28,27 +29,11 @@ export const useMainStore = defineStore("main", {
       }));
     },
 
-    /** 2) 검색어에 매칭되는 후보 추출 (optional helper) */
+    /** 2) 검색어에 매칭되는 후보 추출 (Korean shortcut support added) */
     searchItemCandidates(query) {
       if (!query) return [];
-      const q = query.toLowerCase().replace(/\s+/g, "");
 
-      return this.allItems
-        .filter((item) => {
-          // Remove spaces from item name and create a normalized version
-          const normalizedName = item.nameKorean
-            .replace(/\s+/g, "")
-            .toLowerCase();
-          // Also create English-only version for matching English prefixes
-          const englishPrefix =
-            item.nameKorean.match(/^[a-zA-Z]+/)?.[0]?.toLowerCase() || "";
-
-          return (
-            normalizedName.includes(q) || // Match normalized name
-            (englishPrefix && q.startsWith(englishPrefix))
-          ); // Match English prefix
-        })
-        .slice(0, 10);
+      return searchWithKoreanShortcut(this.allItems, query).slice(0, 10);
     },
 
     /** 3) 아이콘 URL 반환 헬퍼 */
