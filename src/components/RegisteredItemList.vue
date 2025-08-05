@@ -7,7 +7,7 @@
 </template>
 <script setup>
 import { computed } from 'vue'
-import { useMainStore } from '@/store'
+import { useMainStore } from '../store'
 import ItemCard from './ItemCard.vue'
 
 const props = defineProps({

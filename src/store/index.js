@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { itemOptions } from "@/constants/itemOptions";
+import { itemOptions } from "../constants/itemOptions";
 import { reactive } from "vue";
 import api from "@/plugins/axios";
 import { itemsData } from "@/data/itemsData.js";
