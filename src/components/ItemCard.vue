@@ -29,9 +29,10 @@
       </div>
       <button class="item-btn delete-btn" @click="confirmDelete">×</button>
     </div>
-    <div class="options-container">
-      <!-- Other options grid -->
-      <div class="options-grid">
+    <!-- 모바일 환경에서는 Equip이 아닌 옵션은 보여주지 않음 disabled 클래스 media query 활용 -->
+    <div class="options-container" :class="{ 'disabled': !isEquipItem }">
+      <!-- Desktop options grid - show all options -->
+      <div class="options-grid desktop-options">
         <div v-for="opt in otherOptions" :key="opt.key" class="option-cell">
           <div class="option-label">
             {{ opt.label }}
@@ -46,6 +47,27 @@
           </div>
         </div>
       </div>
+      <!-- Mobile options grid - show only options with values -->
+      <!-- media query에서 moblie-option display none 해제 -->
+      <div class="options-grid mobile-options">
+        <div v-for="opt in mobileFilteredOptions" :key="opt.key" class="option-cell">
+          <div class="option-label">
+            {{ opt.label }}
+          </div>
+          <div class="option-value">
+            <template v-if="item.option[`high${opt.key.toUpperCase()}`] != null">
+              {{ item.option[opt.key] || 0 }}~{{ item.option[`high${opt.key.toUpperCase()}`] }}
+            </template>
+            <template v-else>
+              {{ item.option[opt.key] }}
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile message for non-Equip items -->
+    <div v-if="!isEquipItem" class="no-options-message">
+      옵션이 없는 아이템입니다
     </div>
     <div class="edit-alarm-btn">
       <button class="item-btn edit-btn" @click="showEditModal = true">편집하기</button>
@@ -54,7 +76,7 @@
       </button>
     </div>
     <div class="item-bid">
-      <h5 class="bid-title" style="margin: 7px;">코멘트목록</h5>
+      <div class="bid-title">코멘트 목록</div>
       <!--  alert Id에 맞는 코멘트 리스트 출력-->
       <ul v-if="bids && bids.length > 0" class="bid-list">
         <li v-for="(bid, index) in bids" :key="bid.id" class="bid-item-container"
@@ -77,7 +99,8 @@
   </div>
 
   <!-- Edit modal -->
-  <EditModal v-if="showEditModal" :initial-values="item.option" @save="handleSave" @cancel="showEditModal = false" />
+  <EditModal v-if="showEditModal" :initial-values="item.option" :item-id="item.itemId" @save="handleSave"
+    @cancel="showEditModal = false" />
 
   <!-- Add confirmation modal -->
   <div v-if="showConfirmModal" class="confirm-modal">
@@ -98,6 +121,7 @@ import offIcon from '@/assets/alarm-off.png'
 import { useMainStore } from '@/store/index.js'
 import EditModal from './EditModal.vue'
 import { buildMalanggUrl } from '@/utils/malanggUrl.js'
+import { getItemOverallCategory } from '../data/itemsData.js'
 
 
 const props = defineProps({
@@ -113,9 +137,22 @@ const otherOptions = itemOptions
     label: opt.label.length > 2 ? opt.label.substring(0, 2) : opt.label
   }))
 
+// Mobile-filtered options: only show options that have values set
+const mobileFilteredOptions = computed(() => {
+  return otherOptions.filter(opt => {
+    const hasBaseValue = props.item.option[opt.key] != null && props.item.option[opt.key] !== 0
+    const hasHighValue = props.item.option[`high${opt.key.toUpperCase()}`] != null && props.item.option[`high${opt.key.toUpperCase()}`] !== 0
+    return hasBaseValue || hasHighValue
+  })
+})
+
 // Generate malan.gg URL with query parameters based on item options
 const malanggUrl = computed(() => {
   return buildMalanggUrl(props.item.itemId, props.item.option);
+})
+
+const isEquipItem = computed(() => {
+  return getItemOverallCategory(props.item.itemId) === 'Equip'
 })
 
 function handleSave(updatedOptions) {
@@ -169,7 +206,7 @@ function turnOffBid(alertId, bidId) {
   --tw-bg-opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.2s;
-  height: 370px;
+  height: 390px;
   width: 100%;
   min-width: 200px;
   box-sizing: border-box;
@@ -239,6 +276,11 @@ function turnOffBid(alertId, bidId) {
   margin-top: 10px;
 }
 
+.options-container.disabled {
+  opacity: 0.2;
+  pointer-events: none;
+}
+
 .options-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -246,6 +288,24 @@ function turnOffBid(alertId, bidId) {
   justify-content: center;
   height: 60%;
   gap: 3px;
+}
+
+/* Desktop: show desktop options, hide mobile options */
+.desktop-options {
+  display: grid;
+}
+
+.mobile-options {
+  display: none;
+}
+
+.no-options-message {
+  display: none;
+  text-align: center;
+  color: #8C8FA3;
+  font-size: 14px;
+  padding: 20px 10px;
+  margin-top: 10px;
 }
 
 .option-cell {
@@ -271,6 +331,7 @@ function turnOffBid(alertId, bidId) {
   display: flex;
   justify-content: center;
   gap: 10px;
+  margin-bottom: 10px;
 }
 
 .alarm-btn,
@@ -285,7 +346,12 @@ function turnOffBid(alertId, bidId) {
 }
 
 .bid-title {
-  margin: 10px 0 10px 0;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  height: 15px;
+  font-weight: bold;
+  margin-top: 6px;
 }
 
 .bid-list {
@@ -389,6 +455,25 @@ function turnOffBid(alertId, bidId) {
 
   .option-cell {
     height: 3vh;
+  }
+
+  /* 모바일 환경에서 Equip이 아닌 옵션은 보여주지 않음 */
+  .options-container.disabled {
+    display: none;
+  }
+
+  /* Mobile: hide desktop options, show mobile options */
+  .desktop-options {
+    display: none;
+  }
+
+  .mobile-options {
+    display: grid;
+  }
+
+  /* Show no-options message for non-Equip items in mobile */
+  .no-options-message {
+    display: block;
   }
 }
 </style>

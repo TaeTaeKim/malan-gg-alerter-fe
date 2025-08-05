@@ -1,5 +1,9 @@
 // MapleStory item data - embedded as JavaScript module
 // This hides the data from browser network requests
+export function getItemOverallCategory(itemId) {
+  return itemsData[itemId].typeInfo.overallCategory;
+}
+
 export const itemsData = {
   1402010: {
     metaInfo: {

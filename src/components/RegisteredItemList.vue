@@ -41,6 +41,7 @@ const filteredItems = computed(() => {
 @media(max-width:760px) {
   .item-list {
     grid-template-columns: repeat(1, 1fr);
+    gap: 6px;
     /* 한 행에 4개 고정 */
   }
 }

@@ -12,7 +12,7 @@
               @input="(e) => handlePriceInput('high', e)" class="option-input preview-price-input" />
           </div>
         </div>
-        <div class="option-grid option-grid-4">
+        <div v-if="isEquipItem" class="option-grid option-grid-4">
           <div v-for="option in firstRowOptions" :key="option.key" class="option-item">
             <div class="option-header">
               <label :for="option.key" class="option-label">{{ option.label }}</label>
@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-        <div class="option-grid option-grid-5">
+        <div v-if="isEquipItem" class="option-grid option-grid-5">
           <div v-for="option in secondRowOptions" :key="option.key" class="option-item">
             <div class="option-header">
               <label :for="option.key" class="option-label">{{ option.label }}</label>
@@ -62,12 +62,17 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { itemOptions } from '../constants/itemOptions'
+import { getItemOverallCategory } from '@/data/itemsData.js'
 
 const props = defineProps({
   initialValues: {
     type: Object,
+    required: true
+  },
+  itemId: {
+    type: [String, Number],
     required: true
   }
 })
@@ -76,6 +81,12 @@ const emit = defineEmits(['save', 'cancel'])
 
 const firstRowOptions = itemOptions.slice(2, 7) // 힘, 민첩, 인트, 럭
 const secondRowOptions = itemOptions.slice(7) // 공격력, 마력, 합마, 명중률, 이동속도
+
+// Check if item is equipment type
+const isEquipItem = computed(() => {
+  const category = getItemOverallCategory(props.itemId)
+  return category === 'Equip'
+})
 
 const rangeStates = reactive({})
 const optionValues = reactive({})
