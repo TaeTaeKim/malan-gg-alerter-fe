@@ -5,8 +5,7 @@
       <img :src="item.imageUrl" alt="" class="item-img" />
       <div class="item-card-name-price">
         <div class="item-card-name">
-          <a :href="`https://mapleland.gg/item/${item.itemId}`" class="malan-gg-link" target="_blank"
-            rel="noopener noreferrer">
+          <a :href="malanggUrl" class="malan-gg-link" target="_blank" rel="noopener noreferrer">
             <span>{{ item.koreanName }}</span>
             <img src="https://mapleland.gg/logo.png" alt="메랜지지로고" class="malan-gg-logo">
           </a>
@@ -98,6 +97,7 @@ import onIcon from '@/assets/alarm-on.png'
 import offIcon from '@/assets/alarm-off.png'
 import { useMainStore } from '@/store/index.js'
 import EditModal from './EditModal.vue'
+import { buildMalanggUrl } from '@/utils/malanggUrl.js'
 
 
 const props = defineProps({
@@ -112,6 +112,11 @@ const otherOptions = itemOptions
     ...opt,
     label: opt.label.length > 2 ? opt.label.substring(0, 2) : opt.label
   }))
+
+// Generate malan.gg URL with query parameters based on item options
+const malanggUrl = computed(() => {
+  return buildMalanggUrl(props.item.itemId, props.item.option);
+})
 
 function handleSave(updatedOptions) {
   showEditModal.value = false;
