@@ -12,10 +12,10 @@
         <h1>메랜지지 알리미</h1>
       </div>
       <div class="header-actions">
-        <div class="support-container">
+        <!-- <div class="support-container">
           <button class="support-btn" @click="toggleSupport">💸 후원하기</button>
           <SupportModal :is-open="isSupportOpen" @close="isSupportOpen = false" />
-        </div>
+        </div> -->
         <div class="global-alarm-setting">
           <button @click="toggleAlarmSetting" class="global-alarm-btn">
             <img src="@/assets/alarm-on.png" alt="alarm-on">
@@ -61,16 +61,16 @@
 </template>
 
 <script setup>
-import {computed, onMounted, onUnmounted, ref} from 'vue'
-import {useRouter} from 'vue-router'
-import {useAuthStore} from '@/store/auth'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
 import SearchBar from "@/components/SearchBar.vue";
 import GlobalAlarmSettingsModal from "@/components/GlobalAlarmSettingsModal.vue";
 import SupportModal from "@/components/SupportModal.vue";
-import {useUserStore} from '@/store/user'
-import {useMainStore} from '@/store'
+import { useUserStore } from '@/store/user'
+import { useMainStore } from '@/store'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -93,7 +93,7 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
-    mainStore.stopBidPolling();
+  mainStore.stopBidPolling();
 })
 
 const handleLogout = async () => {
@@ -292,6 +292,7 @@ header {
   color: white;
   font-size: 18px;
 }
+
 .search-section {
   height: auto;
   margin-bottom: 40px;
@@ -407,7 +408,8 @@ header {
     font-size: 0.7rem;
     padding: 2px 8px;
   }
-  .trade-type-selector button{
+
+  .trade-type-selector button {
     font-size: 1.2rem;
     padding: 4px 8px;
   }
