@@ -5,7 +5,7 @@ export const itemOptions = [
   { key: "dex", label: "민첩" },
   { key: "int", label: "인트" },
   { key: "luk", label: "럭" },
-  { key: "upgrade", label: "업횟" },
+  { key: "upgrade", label: "작횟수" },
   { key: "pad", label: "공격력" },
   { key: "mad", label: "마력" },
   { key: "hapma", label: "합마" },
