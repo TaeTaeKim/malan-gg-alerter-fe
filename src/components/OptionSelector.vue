@@ -51,31 +51,78 @@
         </div>
       </div>
     </div>
-    <!-- Collapsible Third Row Options -->
-    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="collapsible-section">
-      <button type="button" class="collapsible-header" @click="isThirdRowExpanded = !isThirdRowExpanded">
-        <span class="collapsible-title">추가 옵션</span>
-        <span class="collapsible-arrow" :class="{ 'expanded': isThirdRowExpanded }">▼</span>
-      </button>
+    <!-- Collapsible Sections Container -->
+    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="collapsible-sections-row">
+      <!-- Combined Stats Section (합스탯) -->
+      <div class="collapsible-section">
+        <button type="button" class="collapsible-header" @click="isCombinedStatsExpanded = !isCombinedStatsExpanded">
+          <span class="collapsible-title">합스탯</span>
+          <span class="collapsible-arrow" :class="{ 'expanded': isCombinedStatsExpanded }">▼</span>
+        </button>
 
-      <div v-show="isThirdRowExpanded" class="collapsible-content">
-        <div class="option-grid option-grid-substat">
-          <div v-for="option in thridRowOptions" :key="option.key" class="option-item">
+        <div v-show="isCombinedStatsExpanded" class="collapsible-content">
+          <!-- Stat Selection Buttons -->
+          <div class="stat-selection">
+            <button
+              v-for="stat in combinedStatOptions"
+              :key="stat.key"
+              type="button"
+              class="stat-select-btn"
+              :class="{ 'selected': selectedCombinedStats.includes(stat.key) }"
+              @click="toggleCombinedStat(stat.key)"
+            >
+              {{ stat.label }}
+            </button>
+          </div>
+
+          <!-- Range/Single Input for Combined Stats -->
+          <div class="combined-stat-input">
             <div class="option-header">
-              <label :for="option.key" class="option-label">{{ option.label }}</label>
-              <button type="button" class="range-toggle-btn" @click="toggleRange(option.key)">
-                {{ rangeStates[option.key] ? '단일값' : '범위설정' }}
+              <label class="option-label">합계 값</label>
+              <button type="button" class="range-toggle-btn" @click="toggleRange('combinedStat')">
+                {{ rangeStates['combinedStat'] ? '단일값' : '범위설정' }}
               </button>
             </div>
-            <div v-if="!rangeStates[option.key]" class="single-input">
-              <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
+            <div v-if="!rangeStates['combinedStat']" class="single-input">
+              <input type="number" v-model.number="optionValues['combinedStat']" class="option-input" />
             </div>
             <div v-else class="range-inputs">
-              <input :id="option.key" type="number" v-model.number="optionValues[option.key]"
+              <input type="number" v-model.number="optionValues['combinedStat']"
                 class="option-input range-input" placeholder="최소값" />
-              <input :id="getRangeInputKey(option.key, 'max')" type="number"
-                v-model.number="optionValues[getRangeInputKey(option.key, 'max')]" class="option-input range-input"
+              <input type="number"
+                v-model.number="optionValues['highCOMBINEDSTAT']" class="option-input range-input"
                 placeholder="최대값" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Options Section (추가 옵션) -->
+      <div class="collapsible-section">
+        <button type="button" class="collapsible-header" @click="isThirdRowExpanded = !isThirdRowExpanded">
+          <span class="collapsible-title">추가 옵션</span>
+          <span class="collapsible-arrow" :class="{ 'expanded': isThirdRowExpanded }">▼</span>
+        </button>
+
+        <div v-show="isThirdRowExpanded" class="collapsible-content">
+          <div class="option-grid option-grid-additional">
+            <div v-for="option in thridRowOptions" :key="option.key" class="option-item">
+              <div class="option-header">
+                <label :for="option.key" class="option-label">{{ option.label }}</label>
+                <button type="button" class="range-toggle-btn" @click="toggleRange(option.key)">
+                  {{ rangeStates[option.key] ? '단일값' : '범위설정' }}
+                </button>
+              </div>
+              <div v-if="!rangeStates[option.key]" class="single-input">
+                <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
+              </div>
+              <div v-else class="range-inputs">
+                <input :id="option.key" type="number" v-model.number="optionValues[option.key]"
+                  class="option-input range-input" placeholder="최소값" />
+                <input :id="getRangeInputKey(option.key, 'max')" type="number"
+                  v-model.number="optionValues[getRangeInputKey(option.key, 'max')]" class="option-input range-input"
+                  placeholder="최대값" />
+              </div>
             </div>
           </div>
         </div>
@@ -103,8 +150,21 @@ const firstRowOptions = itemOptions.slice(2, 7) // 힘, 민첩, 인트, 럭, 업
 const secondRowOptions = itemOptions.slice(7,13) // 공격력, 마력, 합마, 명중률, 이동속도
 const thridRowOptions = itemOptions.slice(13)
 
-// State for collapsible third row options (collapsed by default)
+// Combined stats options (힘, 민첩, 인트, 럭, 명중)
+const combinedStatOptions = [
+  { key: 'str', label: '힘' },
+  { key: 'dex', label: '민첩' },
+  { key: 'int', label: '인트' },
+  { key: 'luk', label: '럭' },
+  { key: 'acc', label: '명중' }
+]
+
+// State for collapsible sections (collapsed by default)
 const isThirdRowExpanded = ref(false)
+const isCombinedStatsExpanded = ref(false)
+
+// State for selected combined stats
+const selectedCombinedStats = ref([])
 
 // 특정 Option key가 단일값인지, 범위값인지 체크하는 함수
 const rangeStates = reactive({})
@@ -125,6 +185,21 @@ firstRowOptions.concat(secondRowOptions).forEach(opt => {
   optionValues[getRangeInputKey(opt.key, 'max')] = null
   rangeStates[opt.key] = false
 })
+
+// Initialize combined stat option
+optionValues['combinedStat'] = null
+optionValues['highCOMBINEDSTAT'] = null
+rangeStates['combinedStat'] = false
+
+// Toggle combined stat selection
+function toggleCombinedStat(statKey) {
+  const index = selectedCombinedStats.value.indexOf(statKey)
+  if (index > -1) {
+    selectedCombinedStats.value.splice(index, 1)
+  } else {
+    selectedCombinedStats.value.push(statKey)
+  }
+}
 
 // 단일값 <-> 범위값 토글 함수
 // 토글 시에 들어있던 value 를 같이 넣어준다.
@@ -235,9 +310,24 @@ function onSubmit() {
     }
   }
 
-  // 
+  // Validate combined stat input
+  if (rangeStates['combinedStat']) {
+    const minVal = optionValues['combinedStat']
+    const maxVal = optionValues['highCOMBINEDSTAT']
 
-  emit('submit', { ...optionValues })
+    if (minVal !== null && maxVal !== null && minVal > maxVal) {
+      alert('합스탯의 최소값이 최대값보다 클 수 없습니다.')
+      return
+    }
+  }
+
+  // Prepare submission data with combined stats
+  const submissionData = {
+    ...optionValues,
+    hapStats: selectedCombinedStats.value
+  }
+
+  emit('submit', submissionData)
 }
 </script>
 
@@ -270,6 +360,14 @@ function onSubmit() {
 
 .option-item {
   margin-right: 20px;
+  min-width: 0;
+}
+
+/* Remove right margin for items in grid layouts */
+.option-grid-main .option-item,
+.option-grid-substat .option-item,
+.option-grid-additional .option-item {
+  margin-right: 0;
 }
 
 .option-header {
@@ -282,6 +380,11 @@ function onSubmit() {
 .option-header label {
   font-weight: bold;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.95rem;
 }
 
 .range-toggle-btn {
@@ -325,6 +428,7 @@ function onSubmit() {
   display: grid;
   align-items: center;
   grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
   margin-bottom: 3px;
 }
 
@@ -332,6 +436,14 @@ function onSubmit() {
   display: grid;
   align-items: center;
   grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.option-grid-additional {
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .button-group {
@@ -371,13 +483,31 @@ function onSubmit() {
   background-color: rgba(209, 213, 219, 0.1);
 }
 
-/* Collapsible Section Styles */
-.collapsible-section {
+/* Collapsible Sections Row Container */
+.collapsible-sections-row {
+  display: flex;
+  gap: 10px;
   margin-top: 8px;
   margin-bottom: 8px;
 }
 
+/* Collapsible Section Styles */
+.collapsible-section {
+  min-width: 0;
+}
+
+/* Combined Stats Section - narrower width */
+.collapsible-section:first-child {
+  flex: 0 0 35%;
+}
+
+/* Additional Options Section - wider width */
+.collapsible-section:last-child {
+  flex: 1;
+}
+
 .collapsible-header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -395,7 +525,6 @@ function onSubmit() {
 
 .collapsible-title {
   font-weight: bold;
-  margin-right: .5rem;
   font-size: 1rem;
   color: #d1d5db;
 }
@@ -426,8 +555,63 @@ function onSubmit() {
   }
 }
 
-@media (max-width: 760px) {
+/* Combined Stats Styles */
+.stat-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 12px;
+}
 
+.stat-select-btn {
+  padding: 5px 8px;
+  background-color: #374151;
+  color: #d1d5db;
+  border: 1px solid #6b7280;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: center;
+}
+
+.stat-select-btn:hover {
+  background-color: #4b5563;
+}
+
+.stat-select-btn.selected {
+  background-color: #3b82f6;
+  border-color: #2563eb;
+  color: white;
+}
+
+.combined-stat-input {
+  margin-top: 8px;
+}
+
+@media (max-width: 760px) {
+  /* Stack collapsible sections vertically on mobile */
+  .collapsible-sections-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Reset widths on mobile */
+  .collapsible-section:first-child,
+  .collapsible-section:last-child {
+    flex: 1 1 auto;
+  }
+
+  .stat-selection {
+    gap: 4px;
+  }
+
+  .stat-select-btn {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
 
   .option-grid-main {
     grid-template-columns: repeat(2, 1fr);
@@ -436,7 +620,12 @@ function onSubmit() {
 
   .option-grid-substat {
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .option-grid-additional {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
   }
 
 

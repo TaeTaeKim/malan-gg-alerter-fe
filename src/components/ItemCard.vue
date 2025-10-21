@@ -206,7 +206,7 @@ function turnOffBid(alertId, bidId) {
   --tw-bg-opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.2s;
-  height: 390px;
+  height: auto;
   width: 100%;
   min-width: 200px;
   box-sizing: border-box;
