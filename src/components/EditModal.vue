@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-        <div v-if="isEquipItem" class="option-grid option-grid-5">
+        <div v-if="isEquipItem" class="option-grid option-grid-6">
           <div v-for="option in secondRowOptions" :key="option.key" class="option-item">
             <div class="option-header">
               <label :for="option.key" class="option-label">{{ option.label }}</label>
@@ -52,6 +52,85 @@
             </div>
           </div>
         </div>
+
+        <!-- Collapsible Sections Container -->
+        <div v-if="isEquipItem" class="collapsible-sections-row">
+          <!-- Combined Stats Section (합스탯) -->
+          <div class="collapsible-section">
+            <button type="button" class="collapsible-header" @click="isCombinedStatsExpanded = !isCombinedStatsExpanded">
+              <span class="collapsible-title">합스탯</span>
+              <span class="collapsible-arrow" :class="{ 'expanded': isCombinedStatsExpanded }">▼</span>
+            </button>
+
+            <div v-show="isCombinedStatsExpanded" class="collapsible-content">
+              <!-- Stat Selection Buttons -->
+              <div class="stat-selection">
+                <button
+                  v-for="stat in combinedStatOptions"
+                  :key="stat.key"
+                  type="button"
+                  class="stat-select-btn"
+                  :class="{ 'selected': selectedCombinedStats.includes(stat.key) }"
+                  @click="toggleCombinedStat(stat.key)"
+                >
+                  {{ stat.label }}
+                </button>
+              </div>
+
+              <!-- Range/Single Input for Combined Stats -->
+              <div class="combined-stat-input">
+                <div class="option-header">
+                  <label class="option-label">합계 값</label>
+                  <button type="button" class="range-toggle-btn" @click="toggleRange('combinedStat')">
+                    {{ rangeStates['combinedStat'] ? '단일값' : '범위설정' }}
+                  </button>
+                </div>
+                <div v-if="!rangeStates['combinedStat']" class="single-input">
+                  <input type="number" v-model.number="optionValues['combinedStat']" class="option-input" />
+                </div>
+                <div v-else class="range-inputs">
+                  <input type="number" v-model.number="optionValues['combinedStat']"
+                    class="option-input range-input" placeholder="최소값" />
+                  <input type="number"
+                    v-model.number="optionValues['highCOMBINEDSTAT']" class="option-input range-input"
+                    placeholder="최대값" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Options Section (추가 옵션) -->
+          <div class="collapsible-section">
+            <button type="button" class="collapsible-header" @click="isThirdRowExpanded = !isThirdRowExpanded">
+              <span class="collapsible-title">추가 옵션</span>
+              <span class="collapsible-arrow" :class="{ 'expanded': isThirdRowExpanded }">▼</span>
+            </button>
+
+            <div v-show="isThirdRowExpanded" class="collapsible-content">
+              <div class="option-grid option-grid-additional">
+                <div v-for="option in thirdRowOptions" :key="option.key" class="option-item">
+                  <div class="option-header">
+                    <label :for="option.key" class="option-label">{{ option.label }}</label>
+                    <button type="button" class="range-toggle-btn" @click="toggleRange(option.key)">
+                      {{ rangeStates[option.key] ? '단일값' : '범위설정' }}
+                    </button>
+                  </div>
+                  <div v-if="!rangeStates[option.key]" class="single-input">
+                    <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
+                  </div>
+                  <div v-else class="range-inputs">
+                    <input :id="option.key" type="number" v-model.number="optionValues[option.key]"
+                      class="option-input range-input" placeholder="최소값" />
+                    <input :id="getRangeInputKey(option.key, 'max')" type="number"
+                      v-model.number="optionValues[getRangeInputKey(option.key, 'max')]" class="option-input range-input"
+                      placeholder="최대값" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="button-group">
           <button type="submit" class="submit-btn">저장하기</button>
           <button type="button" class="back-btn" @click="$emit('cancel')">취소</button>
@@ -63,7 +142,7 @@
 
 <script setup>
 import { reactive, ref, computed } from 'vue'
-import { itemOptions } from '../constants/itemOptions'
+import { itemOptions, combinedStatOptions, createCombinedStatToggle } from '../constants/itemOptions'
 import { getItemOverallCategory } from '@/data/itemsData.js'
 
 const props = defineProps({
@@ -79,8 +158,19 @@ const props = defineProps({
 
 const emit = defineEmits(['save', 'cancel'])
 
-const firstRowOptions = itemOptions.slice(2, 7) // 힘, 민첩, 인트, 럭
-const secondRowOptions = itemOptions.slice(7) // 공격력, 마력, 합마, 명중률, 이동속도
+const firstRowOptions = itemOptions.slice(2, 7) // 힘, 민첩, 인트, 럭, 업횟
+const secondRowOptions = itemOptions.slice(7, 13) // 공격력, 마력, 합마, 명중, 이속, 점프
+const thirdRowOptions = itemOptions.slice(13) // 물방, 마방, 회피, HP, MP
+
+// State for collapsible sections (collapsed by default)
+const isThirdRowExpanded = ref(false)
+const isCombinedStatsExpanded = ref(false)
+
+// State for selected combined stats
+const selectedCombinedStats = ref([])
+
+// Use the centralized toggle function from itemOptions
+const toggleCombinedStat = createCombinedStatToggle(selectedCombinedStats)
 
 // Check if item is equipment type
 const isEquipItem = computed(() => {
@@ -107,8 +197,9 @@ function initializeValues() {
   formattedLowPrice.value = props.initialValues.lowPrice ? props.initialValues.lowPrice.toLocaleString() : ''
   formattedHighPrice.value = props.initialValues.highPrice ? props.initialValues.highPrice.toLocaleString() : ''
 
-  // Set option values and determine range states
-  firstRowOptions.concat(secondRowOptions).forEach(opt => {
+  // Set option values and determine range states for all options
+  const allOptions = firstRowOptions.concat(secondRowOptions).concat(thirdRowOptions)
+  allOptions.forEach(opt => {
     const minKey = opt.key
     const maxKey = getRangeInputKey(opt.key, 'max')
 
@@ -118,6 +209,23 @@ function initializeValues() {
     // Set range state based on whether high value exists
     rangeStates[opt.key] = props.initialValues[maxKey] != null
   })
+
+  // Initialize combined stat values
+  optionValues['combinedStat'] = props.initialValues['combinedStat'] || null
+  optionValues['highCOMBINEDSTAT'] = props.initialValues['highCOMBINEDSTAT'] || null
+  rangeStates['combinedStat'] = props.initialValues['highCOMBINEDSTAT'] != null
+
+  // Initialize selected combined stats from hapStats
+  if (props.initialValues.hapStats && Array.isArray(props.initialValues.hapStats)) {
+    selectedCombinedStats.value = [...props.initialValues.hapStats]
+  } else {
+    selectedCombinedStats.value = []
+  }
+
+  // Expand combined stats section if there are saved combined stats
+  if (selectedCombinedStats.value.length > 0) {
+    isCombinedStatsExpanded.value = true
+  }
 }
 
 function toggleRange(optionKey) {
@@ -164,7 +272,7 @@ function onSubmit() {
     return
   }
 
-  const allOptions = firstRowOptions.concat(secondRowOptions)
+  const allOptions = firstRowOptions.concat(secondRowOptions).concat(thirdRowOptions)
   for (const option of allOptions) {
     if (rangeStates[option.key]) {
       const minVal = optionValues[option.key]
@@ -177,7 +285,24 @@ function onSubmit() {
     }
   }
 
-  emit('save', { ...optionValues })
+  // Validate combined stat input
+  if (rangeStates['combinedStat']) {
+    const minVal = optionValues['combinedStat']
+    const maxVal = optionValues['highCOMBINEDSTAT']
+
+    if (minVal !== null && maxVal !== null && minVal > maxVal) {
+      alert('합스탯의 최소값이 최대값보다 클 수 없습니다.')
+      return
+    }
+  }
+
+  // Prepare submission data with combined stats
+  const submissionData = {
+    ...optionValues,
+    hapStats: selectedCombinedStats.value
+  }
+
+  emit('save', submissionData)
 }
 
 // Initialize on component mount
@@ -303,10 +428,19 @@ initializeValues()
   margin-bottom: 3px;
 }
 
-.option-grid-5 {
+.option-grid-6 {
   display: grid;
   align-items: center;
   grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 3px;
+}
+
+.option-grid-additional {
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .button-group {
@@ -346,6 +480,114 @@ initializeValues()
   background-color: rgba(209, 213, 219, 0.1);
 }
 
+/* Collapsible Sections Row Container */
+.collapsible-sections-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+/* Collapsible Section Styles */
+.collapsible-section {
+  min-width: 0;
+}
+
+/* Combined Stats Section - narrower width */
+.collapsible-section:first-child {
+  flex: 0 0 35%;
+}
+
+/* Additional Options Section - wider width */
+.collapsible-section:last-child {
+  flex: 1;
+}
+
+.collapsible-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #2B2F39;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.collapsible-header:hover {
+  background-color: #374151;
+}
+
+.collapsible-title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #d1d5db;
+}
+
+.collapsible-arrow {
+  transition: transform 0.3s ease;
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+.collapsible-arrow.expanded {
+  transform: rotate(-180deg);
+}
+
+.collapsible-content {
+  margin-top: 8px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Combined Stats Styles */
+.stat-selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.stat-select-btn {
+  padding: 5px 8px;
+  background-color: #374151;
+  color: #d1d5db;
+  border: 1px solid #6b7280;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: center;
+}
+
+.stat-select-btn:hover {
+  background-color: #4b5563;
+}
+
+.stat-select-btn.selected {
+  background-color: #3b82f6;
+  border-color: #2563eb;
+  color: white;
+}
+
+.combined-stat-input {
+  margin-top: 8px;
+}
+
 @media (max-width: 760px) {
   .edit-modal-content {
     margin: 10px;
@@ -357,9 +599,35 @@ initializeValues()
     gap: 8px;
   }
 
-  .option-grid-5 {
+  .option-grid-6 {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
+  }
+
+  .option-grid-additional {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  /* Stack collapsible sections vertically on mobile */
+  .collapsible-sections-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Reset widths on mobile */
+  .collapsible-section:first-child,
+  .collapsible-section:last-child {
+    flex: 1 1 auto;
+  }
+
+  .stat-selection {
+    gap: 4px;
+  }
+
+  .stat-select-btn {
+    font-size: 0.8rem;
+    padding: 5px 8px;
   }
 
   .option-item {

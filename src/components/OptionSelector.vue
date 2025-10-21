@@ -137,7 +137,7 @@
 
 <script setup>
 import { reactive, ref, watch } from 'vue'
-import { itemOptions } from '../constants/itemOptions'
+import { itemOptions, combinedStatOptions, createCombinedStatToggle } from '../constants/itemOptions'
 
 const props = defineProps({
   currentItem: {
@@ -150,21 +150,15 @@ const firstRowOptions = itemOptions.slice(2, 7) // 힘, 민첩, 인트, 럭, 업
 const secondRowOptions = itemOptions.slice(7,13) // 공격력, 마력, 합마, 명중률, 이동속도
 const thridRowOptions = itemOptions.slice(13)
 
-// Combined stats options (힘, 민첩, 인트, 럭, 명중)
-const combinedStatOptions = [
-  { key: 'str', label: '힘' },
-  { key: 'dex', label: '민첩' },
-  { key: 'int', label: '인트' },
-  { key: 'luk', label: '럭' },
-  { key: 'acc', label: '명중' }
-]
-
 // State for collapsible sections (collapsed by default)
 const isThirdRowExpanded = ref(false)
 const isCombinedStatsExpanded = ref(false)
 
 // State for selected combined stats
 const selectedCombinedStats = ref([])
+
+// Use the centralized toggle function from itemOptions
+const toggleCombinedStat = createCombinedStatToggle(selectedCombinedStats)
 
 // 특정 Option key가 단일값인지, 범위값인지 체크하는 함수
 const rangeStates = reactive({})
@@ -190,16 +184,6 @@ firstRowOptions.concat(secondRowOptions).forEach(opt => {
 optionValues['combinedStat'] = null
 optionValues['highCOMBINEDSTAT'] = null
 rangeStates['combinedStat'] = false
-
-// Toggle combined stat selection
-function toggleCombinedStat(statKey) {
-  const index = selectedCombinedStats.value.indexOf(statKey)
-  if (index > -1) {
-    selectedCombinedStats.value.splice(index, 1)
-  } else {
-    selectedCombinedStats.value.push(statKey)
-  }
-}
 
 // 단일값 <-> 범위값 토글 함수
 // 토글 시에 들어있던 value 를 같이 넣어준다.
