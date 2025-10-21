@@ -103,6 +103,10 @@ export const useMainStore = defineStore("main", {
                   resItem.itemOptions?.[`high${opt.key.toUpperCase()}`],
                 ])
             ),
+            // Include combined stats fields (합스탯)
+            hapStats: resItem.itemOptions?.hapStats,
+            combinedStat: resItem.itemOptions?.combinedStat,
+            highCOMBINEDSTAT: resItem.itemOptions?.highCOMBINEDSTAT,
           },
           tradeType: resItem.tradeType,
           alarmOn: resItem.isAlarm,

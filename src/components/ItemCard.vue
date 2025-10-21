@@ -65,6 +65,23 @@
         </div>
       </div>
     </div>
+
+    <!-- Combined stats (합스탯) section - shown only when set -->
+    <div v-if="hasCombinedStats" class="combined-stats-section">
+      <div class="combined-stats-label">합스탯</div>
+      <div class="combined-stats-value">
+        <span class="combined-stats-range">
+          <template v-if="item.option.highCOMBINEDSTAT != null">
+            {{ item.option.combinedStat || 0 }}~{{ item.option.highCOMBINEDSTAT }}
+          </template>
+          <template v-else>
+            {{ item.option.combinedStat }}
+          </template>
+        </span>
+        <span class="combined-stats-detail">({{ combinedStatsLabel }})</span>
+      </div>
+    </div>
+
     <!-- Mobile message for non-Equip items -->
     <div v-if="!isEquipItem" class="no-options-message">
       옵션이 없는 아이템입니다
@@ -114,7 +131,7 @@
   </div>
 </template>
 <script setup>
-import { itemOptions } from '@/constants/itemOptions'
+import { itemOptions, combinedStatOptions } from '@/constants/itemOptions'
 import { computed, ref } from "vue";
 import onIcon from '@/assets/alarm-on.png'
 import offIcon from '@/assets/alarm-off.png'
@@ -144,6 +161,28 @@ const mobileFilteredOptions = computed(() => {
     const hasHighValue = props.item.option[`high${opt.key.toUpperCase()}`] != null && props.item.option[`high${opt.key.toUpperCase()}`] !== 0
     return hasBaseValue || hasHighValue
   })
+})
+
+// Check if item has combined stats (합스탯) set
+const hasCombinedStats = computed(() => {
+  return props.item.option.hapStats &&
+         props.item.option.hapStats.length > 0 &&
+         (props.item.option.combinedStat != null || props.item.option.highCOMBINEDSTAT != null)
+})
+
+// Create label for combined stats showing which stats are included
+const combinedStatsLabel = computed(() => {
+  if (!props.item.option.hapStats || props.item.option.hapStats.length === 0) {
+    return ''
+  }
+
+  // Map stat keys to their labels
+  return props.item.option.hapStats
+    .map(statKey => {
+      const option = combinedStatOptions.find(opt => opt.key === statKey)
+      return option ? option.label : statKey
+    })
+    .join('+')
 })
 
 // Generate malan.gg URL with query parameters based on item options
@@ -206,7 +245,7 @@ function turnOffBid(alertId, bidId) {
   --tw-bg-opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.2s;
-  height: 390px;
+  height: auto;
   width: 100%;
   min-width: 200px;
   box-sizing: border-box;
@@ -297,6 +336,39 @@ function turnOffBid(alertId, bidId) {
 
 .mobile-options {
   display: none;
+}
+
+/* Combined stats section styling */
+.combined-stats-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0px;
+  margin-top: 5px;
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+.combined-stats-label {
+  color: #8C8FA3;
+  font-weight: 600;
+  min-width: 50px;
+}
+
+.combined-stats-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #E9ECEF;
+}
+
+.combined-stats-range {
+  font-weight: 600;
+}
+
+.combined-stats-detail {
+  font-size: 0.85em;
+  color: #8C8FA3;
 }
 
 .no-options-message {

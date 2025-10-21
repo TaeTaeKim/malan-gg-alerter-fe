@@ -50,6 +50,28 @@ export function buildMalanggUrl(itemId, itemOptions = {}) {
     }
   });
 
+  // Combined stats (합스탯) mapping
+  if (itemOptions.hapStats && itemOptions.hapStats.length > 0) {
+    // hapStatsName: join stat keys in uppercase (e.g., "STRDEXACC")
+    const hapStatsName = itemOptions.hapStats
+      .map(stat => stat.toUpperCase())
+      .join('');
+    params.append('hapStatsName', hapStatsName);
+
+    // lowHapStatsValue
+    if (itemOptions.combinedStat !== undefined && itemOptions.combinedStat !== null) {
+      params.append('lowHapStatsValue', itemOptions.combinedStat.toString());
+    }
+
+    // highHapStatsValue
+    if (itemOptions.highCOMBINEDSTAT !== undefined && itemOptions.highCOMBINEDSTAT !== null) {
+      params.append('highHapStatsValue', itemOptions.highCOMBINEDSTAT.toString());
+    } else if (itemOptions.combinedStat !== undefined && itemOptions.combinedStat !== null) {
+      // If no high value is set, use the same value as low
+      params.append('highHapStatsValue', itemOptions.combinedStat.toString());
+    }
+  }
+
   const queryString = params.toString();
   return queryString ? `${baseUrl}?${queryString}` : baseUrl;
 }
