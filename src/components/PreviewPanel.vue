@@ -94,9 +94,9 @@ function clearCurrentItem() {
   border: 1px solid #484B56;
   border-radius: 0 8px 8px 8px;
   background-color: #404552;
-  height: 310px;
+  height: auto;
   /* Fixed height instead of max-height */
-  overflow-y: auto;
+  /* overflow-y: auto; */
   transition: border-color .3s ease;
 }
 
@@ -157,7 +157,7 @@ function clearCurrentItem() {
 .preview-item-info {
   display: flex;
   justify-content: start;
-  height: 270px;
+  height: auto;
   gap: 20px;
 }
 

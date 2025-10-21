@@ -11,7 +11,7 @@
           @input="(e) => handlePriceInput('high', e)" class="option-input preview-price-input" />
       </div>
     </div>
-    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="option-grid option-grid-4">
+    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="option-grid option-grid-main">
       <div v-for="option in firstRowOptions" :key="option.key" class="option-item">
         <div class="option-header">
           <label :for="option.key" class="option-label">{{ option.label }}</label>
@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="option-grid option-grid-5">
+    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="option-grid option-grid-substat">
       <div v-for="option in secondRowOptions" :key="option.key" class="option-item">
         <div class="option-header">
           <label :for="option.key" class="option-label">{{ option.label }}</label>
@@ -48,6 +48,36 @@
           <input :id="getRangeInputKey(option.key, 'max')" type="number"
             v-model.number="optionValues[getRangeInputKey(option.key, 'max')]" class="option-input range-input"
             placeholder="최대값" />
+        </div>
+      </div>
+    </div>
+    <!-- Collapsible Third Row Options -->
+    <div v-if="currentItem?.typeInfo?.overallCategory === 'Equip'" class="collapsible-section">
+      <button type="button" class="collapsible-header" @click="isThirdRowExpanded = !isThirdRowExpanded">
+        <span class="collapsible-title">추가 옵션</span>
+        <span class="collapsible-arrow" :class="{ 'expanded': isThirdRowExpanded }">▼</span>
+      </button>
+
+      <div v-show="isThirdRowExpanded" class="collapsible-content">
+        <div class="option-grid option-grid-substat">
+          <div v-for="option in thridRowOptions" :key="option.key" class="option-item">
+            <div class="option-header">
+              <label :for="option.key" class="option-label">{{ option.label }}</label>
+              <button type="button" class="range-toggle-btn" @click="toggleRange(option.key)">
+                {{ rangeStates[option.key] ? '단일값' : '범위설정' }}
+              </button>
+            </div>
+            <div v-if="!rangeStates[option.key]" class="single-input">
+              <input :id="option.key" type="number" v-model.number="optionValues[option.key]" class="option-input" />
+            </div>
+            <div v-else class="range-inputs">
+              <input :id="option.key" type="number" v-model.number="optionValues[option.key]"
+                class="option-input range-input" placeholder="최소값" />
+              <input :id="getRangeInputKey(option.key, 'max')" type="number"
+                v-model.number="optionValues[getRangeInputKey(option.key, 'max')]" class="option-input range-input"
+                placeholder="최대값" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -70,7 +100,11 @@ const props = defineProps({
 })
 
 const firstRowOptions = itemOptions.slice(2, 7) // 힘, 민첩, 인트, 럭, 업횟
-const secondRowOptions = itemOptions.slice(7) // 공격력, 마력, 합마, 명중률, 이동속도
+const secondRowOptions = itemOptions.slice(7,13) // 공격력, 마력, 합마, 명중률, 이동속도
+const thridRowOptions = itemOptions.slice(13)
+
+// State for collapsible third row options (collapsed by default)
+const isThirdRowExpanded = ref(false)
 
 // 특정 Option key가 단일값인지, 범위값인지 체크하는 함수
 const rangeStates = reactive({})
@@ -287,14 +321,14 @@ function onSubmit() {
   color: #d1d5db;
 }
 
-.option-grid-4 {
+.option-grid-main {
   display: grid;
   align-items: center;
   grid-template-columns: repeat(5, 1fr);
   margin-bottom: 3px;
 }
 
-.option-grid-5 {
+.option-grid-substat {
   display: grid;
   align-items: center;
   grid-template-columns: repeat(6, 1fr);
@@ -337,15 +371,70 @@ function onSubmit() {
   background-color: rgba(209, 213, 219, 0.1);
 }
 
+/* Collapsible Section Styles */
+.collapsible-section {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #2B2F39;
+  border: 1px solid #4b5563;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.collapsible-header:hover {
+  background-color: #374151;
+}
+
+.collapsible-title {
+  font-weight: bold;
+  margin-right: .5rem;
+  font-size: 1rem;
+  color: #d1d5db;
+}
+
+.collapsible-arrow {
+  transition: transform 0.3s ease;
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+.collapsible-arrow.expanded {
+  transform: rotate(-180deg);
+}
+
+.collapsible-content {
+  margin-top: 8px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 760px) {
 
 
-  .option-grid-4 {
+  .option-grid-main {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
 
-  .option-grid-5 {
+  .option-grid-substat {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
   }

@@ -12,4 +12,9 @@ export const itemOptions = [
   { key: "accuracy", label: "명중" },
   { key: "speed", label: "이속" },
   { key: "jump", label: "점프" },
+  { key: "pdd", label: "물방" },
+  { key: "mdd", label: "마방" },
+  { key: "eva", label: "회피" },
+  { key: "mhp", label: "HP" },
+  { key: "mmp", label: "MP" },
 ];
