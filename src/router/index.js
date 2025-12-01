@@ -4,6 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import AuthCallBack from "@/views/AuthCallBack.vue";
 import NotFound from "@/views/NotFound.vue"; // Import the NotFound component
 import {useAuthStore} from "@/store/auth";
+import PrivacyPolicy from "@/views/PrivacyPolicy.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.PROD ? "/malan-alerter/" : "/"),
@@ -26,6 +27,10 @@ const router = createRouter({
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
         component: NotFound
+    },
+    {
+      path: '/privacy-policy',
+      component: PrivacyPolicy
     }
   ],
 });

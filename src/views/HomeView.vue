@@ -53,6 +53,10 @@
       <a href="https://open.kakao.com/o/s4fVKDFh" target="_blank" rel="noopener noreferrer" class="openchat-link">
         💬 카카오톡 문의
       </a>
+      <span class="separator">|</span>
+      <router-link class="footer-link" to="/privacy-policy">
+        개인정보처리방침
+      </router-link>
     </div>
     <div class="copyright">
       &copy; 2025 메랜지지 알리미. All rights reserved.
@@ -61,16 +65,15 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/store/auth'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
+import {useRouter} from 'vue-router'
+import {useAuthStore} from '@/store/auth'
 import PreviewPanel from '@/components/PreviewPanel.vue'
 import RegisteredItemList from '@/components/RegisteredItemList.vue'
 import SearchBar from "@/components/SearchBar.vue";
 import GlobalAlarmSettingsModal from "@/components/GlobalAlarmSettingsModal.vue";
-import SupportModal from "@/components/SupportModal.vue";
-import { useUserStore } from '@/store/user'
-import { useMainStore } from '@/store'
+import {useUserStore} from '@/store/user'
+import {useMainStore} from '@/store'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -358,6 +361,23 @@ header {
 
 .openchat-link:hover {
   text-decoration: underline;
+}
+.footer-link {
+  color: #888;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #4a90e2;
+  text-decoration: underline;
+}
+
+.separator {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 12px;
 }
 
 .copyright {
