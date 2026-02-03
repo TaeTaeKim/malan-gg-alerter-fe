@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { itemOptions } from "../constants/itemOptions";
 import { reactive } from "vue";
 import api from "@/plugins/axios";
-import { itemsData } from "@/data/itemsData.js";
 import { searchWithKoreanShortcut } from "../utils/koreanShortcut.js";
 
 export const useMainStore = defineStore("main", {
@@ -14,6 +13,8 @@ export const useMainStore = defineStore("main", {
     // 전체 아이템 목록 (검색용)
     allItems: [], // [{ id: string, nameKorean: string }]
     imageCache: new Map(),
+    // Cache for item type info fetched from maplestory.io API
+    itemTypeCache: reactive(new Map()),
     itemBids: reactive(new Map()),
     bidIntervalId: null,
   }),
@@ -49,22 +50,94 @@ export const useMainStore = defineStore("main", {
       return url;
     },
 
-    // 검색된 아이템 정보를 currentItem에 저장 (JavaScript 모듈에서 직접 조회)
-    fetchItem(query) {
+    /**
+     * Fetch item type info from maplestory.io API
+     * Returns cached value if available, otherwise fetches from API
+     * @param {string|number} itemId - The item ID to fetch
+     * @returns {Promise<object|null>} - The item's typeInfo or null if not found
+     */
+    async fetchItemTypeInfo(itemId) {
+      // Return cached value if exists
+      if (this.itemTypeCache.has(itemId)) {
+        return this.itemTypeCache.get(itemId);
+      }
+
+      try {
+        const response = await fetch(
+          `https://maplestory.io/api/gms/255/item/${itemId}`
+        );
+        if (!response.ok) {
+          // Cache null to avoid repeated failed requests
+          this.itemTypeCache.set(itemId, null);
+          return null;
+        }
+        const data = await response.json();
+        // Cache the typeInfo
+        this.itemTypeCache.set(itemId, data.typeInfo || null);
+        return data.typeInfo || null;
+      } catch (error) {
+        console.error(`Failed to fetch item type info for ${itemId}:`, error);
+        // Cache null on error to avoid repeated requests
+        this.itemTypeCache.set(itemId, null);
+        return null;
+      }
+    },
+
+    /**
+     * Get cached item type info (synchronous)
+     * Returns null if not cached - use fetchItemTypeInfo to load first
+     * @param {string|number} itemId - The item ID
+     * @returns {object|null} - Cached typeInfo or null
+     */
+    getCachedItemTypeInfo(itemId) {
+      return this.itemTypeCache.get(itemId) || null;
+    },
+
+    /**
+     * Check if item is Equip type (synchronous, requires prior fetch)
+     * @param {string|number} itemId - The item ID
+     * @returns {boolean} - True if item is Equip type
+     */
+    isEquipItem(itemId) {
+      const typeInfo = this.itemTypeCache.get(itemId);
+      return typeInfo?.overallCategory === 'Equip';
+    },
+
+    // 검색된 아이템 정보를 currentItem에 저장 (API에서 조회)
+    async fetchItem(query) {
       const item = this.allItems.find((i) => i.nameKorean === query);
       if (item) {
-        const itemData = itemsData[item.id];
+        // Fetch item data from maplestory.io API
+        try {
+          const response = await fetch(
+            `https://maplestory.io/api/gms/255/item/${item.id}`
+          );
 
-        if (itemData) {
-          this.currentItem = {
-            id: item.id,
-            name: item.nameKorean,
-            iconUrl: this.getItemIconUrl(item.id),
-            metaInfo: itemData.metaInfo,
-            typeInfo: itemData.typeInfo,
-          };
-        } else {
-          // Fallback if item not found in data
+          if (response.ok) {
+            const apiData = await response.json();
+            // Cache the typeInfo for later use
+            this.itemTypeCache.set(item.id, apiData.typeInfo || null);
+
+            this.currentItem = {
+              id: item.id,
+              name: item.nameKorean,
+              iconUrl: this.getItemIconUrl(item.id),
+              metaInfo: apiData.metaInfo || {},
+              typeInfo: apiData.typeInfo || {},
+            };
+          } else {
+            // Fallback if API request fails
+            this.currentItem = {
+              id: item.id,
+              name: item.nameKorean,
+              iconUrl: this.getItemIconUrl(item.id),
+              metaInfo: {},
+              typeInfo: {},
+            };
+          }
+        } catch (error) {
+          console.error(`Failed to fetch item data for ${item.id}:`, error);
+          // Fallback on error
           this.currentItem = {
             id: item.id,
             name: item.nameKorean,
