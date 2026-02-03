@@ -141,9 +141,9 @@
 </template>
 
 <script setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, onMounted } from 'vue'
 import { itemOptions, combinedStatOptions, createCombinedStatToggle } from '../constants/itemOptions'
-import { getItemOverallCategory } from '@/data/itemsData.js'
+import { useMainStore } from '@/store/index.js'
 
 const props = defineProps({
   initialValues: {
@@ -172,10 +172,15 @@ const selectedCombinedStats = ref([])
 // Use the centralized toggle function from itemOptions
 const toggleCombinedStat = createCombinedStatToggle(selectedCombinedStats)
 
-// Check if item is equipment type
+// Fetch item type info from API when component mounts
+const store = useMainStore();
+onMounted(() => {
+  store.fetchItemTypeInfo(props.itemId);
+});
+
+// Check if item is equipment type (reads from store cache)
 const isEquipItem = computed(() => {
-  const category = getItemOverallCategory(props.itemId)
-  return category === 'Equip'
+  return store.isEquipItem(props.itemId);
 })
 
 const rangeStates = reactive({})

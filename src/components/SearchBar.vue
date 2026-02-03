@@ -74,14 +74,14 @@ function onInput(e) {
 }
 
 // 검색 클릭시에 동작하는 메소드
-function onSearch() {
-  store.fetchItem(query.value)
+async function onSearch() {
+  await store.fetchItem(query.value)
   candidates.value = []
 }
 
 // 검색 후보 중 클릭시 검색어를 해당 후보의 이름으로 변경
-function onClick(item) {
-  store.fetchItem(item.nameKorean)
+async function onClick(item) {
+  await store.fetchItem(item.nameKorean)
   query.value = item.nameKorean
   candidates.value = []
 }

@@ -132,13 +132,12 @@
 </template>
 <script setup>
 import { itemOptions, combinedStatOptions } from '@/constants/itemOptions'
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import onIcon from '@/assets/alarm-on.png'
 import offIcon from '@/assets/alarm-off.png'
 import { useMainStore } from '@/store/index.js'
 import EditModal from './EditModal.vue'
 import { buildMalanggUrl } from '@/utils/malanggUrl.js'
-import { getItemOverallCategory } from '../data/itemsData.js'
 
 
 const props = defineProps({
@@ -166,8 +165,8 @@ const mobileFilteredOptions = computed(() => {
 // Check if item has combined stats (합스탯) set
 const hasCombinedStats = computed(() => {
   return props.item.option.hapStats &&
-         props.item.option.hapStats.length > 0 &&
-         (props.item.option.combinedStat != null || props.item.option.highCOMBINEDSTAT != null)
+    props.item.option.hapStats.length > 0 &&
+    (props.item.option.combinedStat != null || props.item.option.highCOMBINEDSTAT != null)
 })
 
 // Create label for combined stats showing which stats are included
@@ -190,8 +189,15 @@ const malanggUrl = computed(() => {
   return buildMalanggUrl(props.item.itemId, props.item.option);
 })
 
+// Fetch item type info from API when component mounts
+const store = useMainStore();
+onMounted(() => {
+  store.fetchItemTypeInfo(props.item.itemId);
+});
+
+// Check if item is Equip type (reads from store cache)
 const isEquipItem = computed(() => {
-  return getItemOverallCategory(props.item.itemId) === 'Equip'
+  return store.isEquipItem(props.item.itemId);
 })
 
 function handleSave(updatedOptions) {
@@ -211,7 +217,6 @@ function handleDelete() {
 }
 
 // bid list
-const store = useMainStore();
 const bids = computed(() => {
   const itemId = props.item.id;
   const bidsFromStore = store.itemBids.get(itemId);
