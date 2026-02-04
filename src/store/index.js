@@ -64,7 +64,7 @@ export const useMainStore = defineStore("main", {
 
       try {
         const response = await fetch(
-          `https://maplestory.io/api/gms/255/item/${itemId}`
+          `https://maplestory.io/api/gms/255/item/${itemId}`,
         );
         if (!response.ok) {
           // Cache null to avoid repeated failed requests
@@ -100,7 +100,7 @@ export const useMainStore = defineStore("main", {
      */
     isEquipItem(itemId) {
       const typeInfo = this.itemTypeCache.get(itemId);
-      return typeInfo?.overallCategory === 'Equip';
+      return typeInfo?.overallCategory === "Equip";
     },
 
     // 검색된 아이템 정보를 currentItem에 저장 (API에서 조회)
@@ -110,7 +110,7 @@ export const useMainStore = defineStore("main", {
         // Fetch item data from maplestory.io API
         try {
           const response = await fetch(
-            `https://maplestory.io/api/gms/255/item/${item.id}`
+            `https://maplestory.io/api/gms/255/item/${item.id}`,
           );
 
           if (response.ok) {
@@ -163,18 +163,18 @@ export const useMainStore = defineStore("main", {
               itemOptions.map((opt) => [
                 opt.key,
                 resItem.itemOptions?.[opt.key],
-              ])
+              ]),
             ),
             // Include high{KEY} values for range inputs
             ...Object.fromEntries(
               itemOptions
                 .filter(
-                  (opt) => opt.key !== "lowPrice" && opt.key !== "highPrice"
+                  (opt) => opt.key !== "lowPrice" && opt.key !== "highPrice",
                 )
                 .map((opt) => [
                   `high${opt.key.toUpperCase()}`,
                   resItem.itemOptions?.[`high${opt.key.toUpperCase()}`],
-                ])
+                ]),
             ),
             // Include combined stats fields (합스탯)
             hapStats: resItem.itemOptions?.hapStats,
@@ -197,7 +197,7 @@ export const useMainStore = defineStore("main", {
       try {
         await api.post(
           `/api/alerter?itemId=${itemId}&tradeType=${tradeType}`,
-          option
+          option,
         );
         // After successful registration, fetch the updated list
         await this.fetchRegisteredItems();
@@ -222,7 +222,7 @@ export const useMainStore = defineStore("main", {
         params: { alertId: alertId },
       });
       this.registeredItems = this.registeredItems.filter(
-        (i) => i.id !== alertId
+        (i) => i.id !== alertId,
       );
     },
 
