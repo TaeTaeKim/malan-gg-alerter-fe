@@ -72,9 +72,11 @@ export const useMainStore = defineStore("main", {
           return null;
         }
         const data = await response.json();
+        // Default overallCategory to "Equip" when API returns null body or null typeInfo
+        const typeInfo = data?.typeInfo || { overallCategory: "Equip" };
         // Cache the typeInfo
-        this.itemTypeCache.set(itemId, data.typeInfo || null);
-        return data.typeInfo || null;
+        this.itemTypeCache.set(itemId, typeInfo);
+        return typeInfo;
       } catch (error) {
         console.error(`Failed to fetch item type info for ${itemId}:`, error);
         // Cache null on error to avoid repeated requests
@@ -115,15 +117,18 @@ export const useMainStore = defineStore("main", {
 
           if (response.ok) {
             const apiData = await response.json();
+            // Default overallCategory to "Equip" when API returns null body or null typeInfo
+            const typeInfo = apiData?.typeInfo || { overallCategory: "Equip" };
+
             // Cache the typeInfo for later use
-            this.itemTypeCache.set(item.id, apiData.typeInfo || null);
+            this.itemTypeCache.set(item.id, typeInfo);
 
             this.currentItem = {
               id: item.id,
               name: item.nameKorean,
               iconUrl: this.getItemIconUrl(item.id),
-              metaInfo: apiData.metaInfo || {},
-              typeInfo: apiData.typeInfo || {},
+              metaInfo: apiData?.metaInfo || {},
+              typeInfo,
             };
           } else {
             // Fallback if API request fails
